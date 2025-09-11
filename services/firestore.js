@@ -1,5 +1,5 @@
 import { addDoc, collection, getDocs } from 'firebase/firestore';
-import { db } from './firebase';
+import { firestore as db } from './firebase';
 
 export async function addDocument(collectionName, data) {
   const docRef = await addDoc(collection(db, collectionName), data);

@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View
+} from 'react-native';
+import { Button as UIButton } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from '../../hooks/useTranslation';
+
+const { width, height } = Dimensions.get('window');
 
 const validateEmail = (email: string) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 };
 
-export function RegisterScreen({ navigation }: any) {
+const RegisterScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -67,71 +78,113 @@ export function RegisterScreen({ navigation }: any) {
     email && password && confirmPassword && !emailError && !passwordError && !confirmError;
 
   return (
-    <View style={styles.container}>
-      <Input
-        label={t('register.email')}
-        placeholder={t('register.email')}
-        value={email}
-        onChangeText={(text) => {
-          setEmail(text);
-          if (emailError) setEmailError('');
-        }}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        error={emailError}
-      />
-      <Input
-        label={t('register.password')}
-        placeholder={t('register.password')}
-        value={password}
-        onChangeText={(text) => {
-          setPassword(text);
-          if (passwordError) setPasswordError('');
-        }}
-        secureTextEntry
-        error={passwordError}
-      />
-      <Input
-        label={t('register.confirmPassword')}
-        placeholder={t('register.confirmPassword')}
-        value={confirmPassword}
-        onChangeText={(text) => {
-          setConfirmPassword(text);
-          if (confirmError) setConfirmError('');
-        }}
-        secureTextEntry
-        error={confirmError}
-      />
-      <Button title={t('register.button')} onPress={handleRegister} disabled={!isFormValid} />
-      <Button title={t('register.back')} onPress={() => navigation.goBack()} />
-      {submitError ? <Input error={submitError} editable={false} /> : null}
-    </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+      >
+        <View style={styles.register}>
+          <View style={styles.logoContainer}>
+            <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+          </View>
+          <View style={styles.formContainer}>
+            <Input
+              placeholder={t('register.email')}
+              value={email}
+              onChangeText={(text) => {
+                setEmail(text);
+                if (emailError) setEmailError('');
+              }}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              error={emailError}
+            />
+            <Input
+              placeholder={t('register.password')}
+              value={password}
+              onChangeText={(text) => {
+                setPassword(text);
+                if (passwordError) setPasswordError('');
+              }}
+              secureTextEntry
+              showPasswordToggle={true}
+              error={passwordError}
+            />
+            <Input
+              placeholder={t('register.confirmPassword')}
+              value={confirmPassword}
+              onChangeText={(text) => {
+                setConfirmPassword(text);
+                if (confirmError) setConfirmError('');
+              }}
+              secureTextEntry
+              showPasswordToggle={true}
+              error={confirmError}
+            />
+            <UIButton
+              title={t('register.button')}
+              onPress={handleRegister}
+              disabled={!isFormValid}
+              style={styles.registerButton}
+            />
+            <UIButton
+              title={t('register.back')}
+              variant="secondary"
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
+            />
+            {submitError ? <Input error={submitError} editable={false} /> : null}
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
-}
+};
+
+export default RegisterScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000000'
+  },
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
-    padding: 24,
-    backgroundColor: '#fff'
+    minHeight: height
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    textAlign: 'center'
+  register: {
+    flex: 1,
+    justifyContent: 'center',
+    maxWidth: '70%',
+    alignSelf: 'center',
+    width: '100%'
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
+  logoContainer: {
+    alignItems: 'center'
+  },
+  logo: {
+    width: width * 0.5,
+    height: width * 0.5,
+    maxWidth: 200,
+    maxHeight: 200,
+    marginBottom: 10
+  },
+  formContainer: {
+    alignSelf: 'center',
+    width: '100%'
+  },
+  registerButton: {
+    marginTop: 20,
+    marginBottom: 12
+  },
+  backButton: {
     marginBottom: 16
-  },
-  error: {
-    color: 'red',
-    marginTop: 12,
-    textAlign: 'center'
   }
 });

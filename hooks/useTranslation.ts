@@ -1,14 +1,14 @@
 import * as Localization from 'expo-localization';
-import i18n from 'i18n-js';
+import { I18n } from 'i18n-js';
 import { useEffect, useState } from 'react';
 
 import en from '../locales/en.json';
 import es from '../locales/es.json';
 
-i18n.translations = { es, en };
-i18n.fallbacks = true;
-
-i18n.locale = Localization.locale || 'es';
+const deviceLocale = Localization.getLocales()[0]?.languageCode || 'es';
+const i18n = new I18n({ en, es });
+i18n.enableFallback = true;
+i18n.locale = deviceLocale;
 
 export function useTranslation() {
   const [locale, setLocale] = useState(i18n.locale);
@@ -18,7 +18,7 @@ export function useTranslation() {
   }, [locale]);
 
   return {
-    t: i18n.t,
+    t: i18n.translate.bind(i18n),
     locale,
     setLocale
   };

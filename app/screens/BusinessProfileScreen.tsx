@@ -1,3 +1,4 @@
+import { RouteProp, useRoute } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -8,14 +9,34 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { CartContext } from '../../contexts/CartContext.js';
+import { CartContext } from '../../contexts/CartContext';
 import { useTranslation } from '../../hooks/useTranslation';
 import { getProductsByBusiness } from '../../services/firestore.js';
 import { colors } from '../../theme/colors.js';
 
-export default function BusinessProfileScreen({ route }) {
+// Define el tipo Product
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  image?: string;
+}
+
+// Define el tipo de los parámetros de navegación
+interface BusinessProfileParams {
+  businessId: string;
+  businessName?: string;
+}
+
+type BusinessProfileRouteProp = RouteProp<
+  { BusinessProfile: BusinessProfileParams },
+  'BusinessProfile'
+>;
+
+export default function BusinessProfileScreen() {
+  const route = useRoute<BusinessProfileRouteProp>();
   const { businessId, businessName: navBusinessName } = route.params;
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const { addItem } = useContext(CartContext);
@@ -25,7 +46,16 @@ export default function BusinessProfileScreen({ route }) {
     setLoading(true);
     setError('');
     getProductsByBusiness(businessId)
-      .then(setProducts)
+      .then((data) => {
+        // Mapear los datos para asegurar el tipado correcto
+        const products: Product[] = data.map((doc: any) => ({
+          id: doc.id,
+          name: doc.name ?? '',
+          price: doc.price ?? 0,
+          image: doc.image ?? undefined
+        }));
+        setProducts(products);
+      })
       .catch((err) => {
         setError(t('business.error_loading_products'));
         console.error('Error loading products:', err);
@@ -70,7 +100,7 @@ export default function BusinessProfileScreen({ route }) {
               </Text>
               <TouchableOpacity
                 style={styles.addButton}
-                onPress={() => addItem({ ...item, quantity: 1 }, businessId)}
+                onPress={() => addItem({ ...item, quantity: 1, businessId })}
               >
                 <Text style={styles.addButtonText}>{t('business.add_to_cart')}</Text>
               </TouchableOpacity>

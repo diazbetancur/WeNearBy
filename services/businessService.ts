@@ -1,5 +1,5 @@
 import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
-import { db } from './firebase';
+import { firestore as db } from './firebase';
 
 export type Business = {
   id: string;

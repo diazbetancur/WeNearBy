@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useCallback, useContext, useMemo, useReducer } from 'react';
 import { Alert } from 'react-native';
 
 const initialState = {
@@ -61,33 +61,41 @@ export const CartContext = createContext({
 export const CartProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, initialState);
 
-  const addItem = (product, businessId) => {
-    if (state.items.length > 0 && state.businessId && state.businessId !== businessId) {
-      Alert.alert('¿Cambiar de negocio?', 'Tu carrito actual se borrará. ¿Continuar?', [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Continuar',
-          onPress: () => {
-            dispatch({ type: 'CLEAR_CART' });
-            dispatch({ type: 'ADD_ITEM', payload: { product, businessId } });
+  const addItem = useCallback(
+    (product, businessId) => {
+      if (state.items.length > 0 && state.businessId && state.businessId !== businessId) {
+        Alert.alert('¿Cambiar de negocio?', 'Tu carrito actual se borrará. ¿Continuar?', [
+          { text: 'Cancelar', style: 'cancel' },
+          {
+            text: 'Continuar',
+            onPress: () => {
+              dispatch({ type: 'CLEAR_CART' });
+              dispatch({ type: 'ADD_ITEM', payload: { product, businessId } });
+            }
           }
-        }
-      ]);
-      return;
-    }
-    dispatch({ type: 'ADD_ITEM', payload: { product, businessId } });
-  };
-
-  const removeItem = (id) => dispatch({ type: 'REMOVE_ITEM', payload: id });
-  const clearCart = () => dispatch({ type: 'CLEAR_CART' });
-
-  return (
-    <CartContext.Provider
-      value={{ businessId: state.businessId, items: state.items, addItem, removeItem, clearCart }}
-    >
-      {children}
-    </CartContext.Provider>
+        ]);
+        return;
+      }
+      dispatch({ type: 'ADD_ITEM', payload: { product, businessId } });
+    },
+    [state.items, state.businessId]
   );
+
+  const removeItem = useCallback((id) => dispatch({ type: 'REMOVE_ITEM', payload: id }), []);
+  const clearCart = useCallback(() => dispatch({ type: 'CLEAR_CART' }), []);
+
+  const value = useMemo(
+    () => ({
+      businessId: state.businessId,
+      items: state.items,
+      addItem,
+      removeItem,
+      clearCart
+    }),
+    [state.businessId, state.items, addItem, removeItem, clearCart]
+  );
+
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
 export const useCart = () => useContext(CartContext);

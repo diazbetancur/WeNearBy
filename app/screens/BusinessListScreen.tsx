@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import { FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -10,9 +10,13 @@ type Business = {
   logo?: string;
 };
 
+type RootStackParamList = {
+  BusinessProfile: { businessId: string; businessName: string };
+};
+
 export default function BusinessListScreen() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { t } = useTranslation();
 
   useEffect(() => {

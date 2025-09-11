@@ -1,12 +1,17 @@
 // services/firebaseConfig.ts
-// Archivo para cargar la configuración de Firebase desde variables de entorno o archivo local
+// Configuración de Firebase
 
 export const firebaseConfig = {
-  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyChdRy7fR7WHpmRB1hHA6Gxx-VtZxuyynI",
+  authDomain: "wenearbyapp.firebaseapp.com",
+  projectId: "wenearbyapp",
+  storageBucket: "wenearbyapp.firebasestorage.app",
+  messagingSenderId: "174639491380",
+  appId: "1:174639491380:web:ae20b5f6f5fbfbbef99d61",
+  measurementId: "G-5RHW0D3E6G"
 };
+
+console.log('🔥 Firebase Config loaded:', {
+  projectId: firebaseConfig.projectId,
+  authDomain: firebaseConfig.authDomain
+});

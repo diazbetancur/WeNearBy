@@ -3,9 +3,10 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { firebaseConfig } from './firebaseConfig';
 
-// Inicializa Firebase App
 const app = initializeApp(firebaseConfig);
 
-// Inicializa Auth y Firestore
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+// ✅ Firebase detecta AsyncStorage automáticamente en v12+
+const auth = getAuth(app);
+const firestore = getFirestore(app);
+
+export { auth, firestore };

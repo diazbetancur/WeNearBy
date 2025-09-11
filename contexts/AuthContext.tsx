@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut
 } from 'firebase/auth';
-import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { auth } from '../services/firebase';
 
 interface AuthContextType {
@@ -30,44 +30,58 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return unsubscribe;
   }, []);
 
-  const errorMessages: Record<string, string> = {
-    'auth/invalid-email': 'Correo electrónico inválido',
-    'auth/user-not-found': 'Usuario no encontrado',
-    'auth/wrong-password': 'Contraseña incorrecta',
-    'auth/email-already-in-use': 'El correo ya está registrado',
-    'auth/weak-password': 'La contraseña es demasiado débil',
-    'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde'
-    // Agrega más códigos de error aquí si lo necesitas
-  };
+  const errorMessages = useMemo(
+    () => ({
+      'auth/invalid-email': 'Correo electrónico inválido',
+      'auth/user-not-found': 'Usuario no encontrado',
+      'auth/wrong-password': 'Contraseña incorrecta',
+      'auth/email-already-in-use': 'El correo ya está en uso',
+      'auth/weak-password': 'La contraseña es muy débil',
+      'auth/user-disabled': 'Cuenta deshabilitada',
+      'auth/invalid-api-key': 'Clave API inválida',
+      'auth/configuration-not-found':
+        'Configuración de Firebase no encontrada. Verifica tu proyecto.'
+    }),
+    []
+  );
 
-  function mapAuthError(error: any): string {
-    const code = error?.code || '';
-    return errorMessages[code] || error?.message || 'Error desconocido.';
-  }
+  const mapAuthError = useCallback(
+    (error: any): string => {
+      const code = error?.code || '';
+      return errorMessages[code] || error?.message || 'Error desconocido.';
+    },
+    [errorMessages]
+  );
 
-  const signIn = async (email: string, password: string) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch (error: any) {
-      throw new Error(mapAuthError(error));
-    }
-  };
+  const signIn = useCallback(
+    async (email: string, password: string) => {
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (error: any) {
+        throw new Error(mapAuthError(error));
+      }
+    },
+    [mapAuthError]
+  );
 
-  const signUp = async (email: string, password: string) => {
-    try {
-      await createUserWithEmailAndPassword(auth, email, password);
-    } catch (error: any) {
-      throw new Error(mapAuthError(error));
-    }
-  };
+  const signUp = useCallback(
+    async (email: string, password: string) => {
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } catch (error: any) {
+        throw new Error(mapAuthError(error));
+      }
+    },
+    [mapAuthError]
+  );
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     await signOut(auth);
-  };
+  }, []);
 
   const value = useMemo(
     () => ({ currentUser, loading, signIn, signUp, logout }),
-    [currentUser, loading]
+    [currentUser, loading, signIn, signUp, logout]
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

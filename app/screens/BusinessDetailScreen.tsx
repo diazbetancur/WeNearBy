@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../../components/ui/Button';
-import { useCart } from '../../contexts/CartContext';
+import { CartContext } from '../../contexts/CartContext';
 import { Business, getBusinessById, getProductsByBusiness } from '../../services/businessService';
 
 export default function BusinessDetailScreen({ route }: any) {
   const { businessId } = route.params;
   const [business, setBusiness] = useState<Business | null>(null);
   const [products, setProducts] = useState<any[]>([]);
-  const { addToCart } = useCart();
+  const { addItem } = useContext(CartContext);
 
   useEffect(() => {
     getBusinessById(businessId).then(setBusiness);
@@ -37,7 +37,7 @@ export default function BusinessDetailScreen({ route }: any) {
             </Text>
             <Button
               title="Agregar al carrito"
-              onPress={() => addToCart({ ...item, quantity: 1, businessId })}
+              onPress={() => addItem({ ...item, quantity: 1, businessId })}
             />
           </View>
         )}

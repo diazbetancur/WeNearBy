@@ -1,5 +1,5 @@
-import { addDoc, collection, DocumentData, getDocs, query, where } from 'firebase/firestore';
-import { db } from './firebase';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { firestore as db } from './firebase';
 
 export type Order = {
   id?: string;
@@ -21,7 +21,7 @@ export async function getOrdersByCustomer(customerId: string): Promise<Order[]> 
   const q = query(collection(db, 'orders'), where('customerId', '==', customerId));
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => {
-    const data = doc.data() as DocumentData;
+    const data = doc.data();
     return {
       id: doc.id,
       customerId: data.customerId,
