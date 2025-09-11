@@ -5,9 +5,12 @@ import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { useTranslation } from '@/hooks/useTranslation';
+import { RoleSwitcher } from '../../src/shared/components/RoleSwitcher';
+import { useRole } from '../../src/shared/services/RoleContext';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
+  const { currentRole } = useRole();
 
   return (
     <ParallaxScrollView
@@ -21,9 +24,17 @@ export default function HomeScreen() {
     >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">{t('home.title')}</ThemedText>
+        <ThemedText type="subtitle">
+          Rol actual: {currentRole === 'customer' ? 'Cliente' : 'Comercio'}
+        </ThemedText>
       </ThemedView>
+
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">{t('home.subtitle')}</ThemedText>
+      </ThemedView>
+
+      <ThemedView style={styles.stepContainer}>
+        <RoleSwitcher />
       </ThemedView>
     </ParallaxScrollView>
   );

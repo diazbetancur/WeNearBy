@@ -1,15 +1,13 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import BusinessDetailScreen from '../screens/BusinessDetailScreen';
-import BusinessListScreen from '../screens/BusinessListScreen';
-import BusinessProfileScreen from '../screens/BusinessProfileScreen';
-import CartScreen from '../screens/CartScreen';
+import { useRole } from '../../src/shared/services/RoleContext';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import { BusinessNavigator } from './BusinessNavigator';
+import { CustomerNavigator } from './CustomerNavigator';
 
 const AuthStack = createNativeStackNavigator();
-const MainStack = createNativeStackNavigator();
 
 function AuthStackScreen() {
   return (
@@ -25,20 +23,18 @@ function AuthStackScreen() {
 }
 
 function MainStackScreen() {
-  return (
-    <MainStack.Navigator initialRouteName="BusinessList">
-      <MainStack.Screen name="BusinessList" component={BusinessListScreen} />
-      <MainStack.Screen name="BusinessDetail" component={BusinessDetailScreen} />
-      <MainStack.Screen name="BusinessProfile" component={BusinessProfileScreen} />
-      <MainStack.Screen name="Cart" component={CartScreen} />
-    </MainStack.Navigator>
-  );
+  const { currentRole } = useRole();
+
+  // Renderizar el navegador correspondiente al rol actual
+  return currentRole === 'business' ? <BusinessNavigator /> : <CustomerNavigator />;
 }
 
 export default function AppNavigator() {
   const { currentUser, loading } = useAuth();
 
-  if (loading) return null; // Puedes mostrar un SplashScreen aquí
+  if (loading) return null; // Splash screen mientras carga la autenticación
 
+  // Mostrar pantallas de autenticación si no hay usuario logueado
+  // O mostrar el navegador principal basado en el rol del usuario
   return <>{currentUser ? <MainStackScreen /> : <AuthStackScreen />}</>;
 }

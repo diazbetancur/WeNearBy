@@ -1,2 +1,3 @@
 // Shared components exports
-// Will contain: Button, Input, Modal, etc.
+export { RoleSwitcher } from './RoleSwitcher';
+// TODO: Add more component exports when they are moved here

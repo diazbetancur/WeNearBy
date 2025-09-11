@@ -1,2 +1,3 @@
 // Shared services exports
-// Will contain: authService, firestoreService, locationService, etc.
+export * from './RoleContext';
+// TODO: Add more service exports when they are moved here
