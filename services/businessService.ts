@@ -21,10 +21,15 @@ export async function getBusinesses(): Promise<Business[]> {
       logo: data.logo || '',
       description: data.description || '',
       paymentMethods: data.paymentMethods || [],
-      deliveryZones: data.deliveryZones || [],
-      products: data.products || []
+      deliveryZones: data.deliveryZones || []
     };
   });
+}
+
+export async function getProductsByBusiness(businessId: string): Promise<any[]> {
+  const productsRef = collection(db, 'businesses', businessId, 'products');
+  const snapshot = await getDocs(productsRef);
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 }
 
 export async function getBusinessById(businessId: string): Promise<Business | null> {

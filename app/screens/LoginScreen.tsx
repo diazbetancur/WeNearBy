@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { Button as UIButton } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTranslation } from '../../hooks/useTranslation';
 
-export default function LoginScreen({ navigation }: any) {
+export function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { signIn } = useAuth();
+  const { t } = useTranslation();
 
   const handleLogin = async () => {
     setError('');
@@ -14,31 +18,34 @@ export default function LoginScreen({ navigation }: any) {
       await signIn(email, password);
       navigation.replace('BusinessList');
     } catch (e: any) {
-      setError(e.message || 'Error al iniciar sesión');
+      setError(e.message || t('login.error'));
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Iniciar Sesión</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
+      <Input
+        label={t('login.email')}
+        placeholder={t('login.email')}
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
         keyboardType="email-address"
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
+      <Input
+        label={t('login.password')}
+        placeholder={t('login.password')}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Login" onPress={handleLogin} />
-      <Button title="Registrarse" onPress={() => navigation.navigate('Register')} />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      <UIButton title={t('login.button')} onPress={handleLogin} />
+      <UIButton
+        title={t('login.register')}
+        variant="secondary"
+        onPress={() => navigation.navigate('Register')}
+      />
+      {error ? <Input error={error} editable={false} /> : null}
     </View>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 
-export default function RegisterScreen({ navigation }: any) {
+export function RegisterScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

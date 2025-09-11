@@ -2,19 +2,19 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, ViewStyle } from 'react-native';
 import { colors } from '../../theme/colors';
 
-interface ButtonProps {
+type ButtonProps = {
   title: string;
   onPress: () => void;
-  style?: ViewStyle;
   variant?: 'primary' | 'secondary';
+  style?: ViewStyle;
   disabled?: boolean;
-}
+};
 
 export const Button: React.FC<ButtonProps> = ({
   title,
   onPress,
-  style,
   variant = 'primary',
+  style,
   disabled
 }) => {
   return (

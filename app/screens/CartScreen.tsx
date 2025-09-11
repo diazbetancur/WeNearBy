@@ -1,22 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Button, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import { createOrder } from '../../services/orderService';
+import { getBusinessById } from '../../services/businessService';
 
 export default function CartScreen({ navigation }: any) {
-  const { cart, clearCart } = useCart();
+  const { items, businessId, clearCart } = useCart();
   const { currentUser } = useAuth();
   const [loading, setLoading] = useState(false);
+  const [businessName, setBusinessName] = useState<string>('');
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  useEffect(() => {
+    if (businessId) {
+      getBusinessById(businessId).then((b) => setBusinessName(b?.name || ''));
+    } else {
+      setBusinessName('');
+    }
+  }, [businessId]);
+
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handleOrder = async () => {
     if (!currentUser) {
       Alert.alert('Debes iniciar sesión para hacer un pedido');
       return;
     }
-    if (cart.length === 0) {
+    if (items.length === 0) {
       Alert.alert('El carrito está vacío');
       return;
     }
@@ -24,12 +34,12 @@ export default function CartScreen({ navigation }: any) {
     try {
       const orderData = {
         customerId: currentUser.uid,
-        businessId: cart[0]?.businessId || '',
-        products: cart,
+        businessId: businessId || '',
+        products: items,
         total,
-        status: 'pending',
-        paymentMethod: 'cash', // Puedes permitir elegir método
-        deliveryType: 'pickup' // Puedes permitir elegir tipo
+  status: 'pending' as const,
+        paymentMethod: 'cash',
+  deliveryType: 'pickup' as const
       };
       await createOrder(orderData);
       clearCart();
@@ -42,26 +52,40 @@ export default function CartScreen({ navigation }: any) {
     }
   };
 
+  if (items.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Carrito vacío</Text>
+        <Text style={styles.empty}>No hay productos en el carrito.</Text>
+        <Button title="Volver" onPress={() => navigation.navigate('BusinessList')} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Carrito</Text>
+      <Text style={styles.businessName}>Negocio: {businessName}</Text>
       <FlatList
-        data={cart}
+        data={items}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <Text style={styles.itemText}>
-              {item.name} x{item.quantity} - ${item.price * item.quantity}
+              {item.name} x{item.quantity} - ${item.price} c/u
+            </Text>
+            <Text style={styles.itemText}>
+              Subtotal: ${item.price * item.quantity}
             </Text>
           </View>
         )}
-        ListEmptyComponent={<Text style={styles.empty}>No hay productos en el carrito.</Text>}
+        contentContainerStyle={{ paddingBottom: 24 }}
       />
-      <Text style={styles.total}>Total: ${total}</Text>
+      <Text style={styles.total}>Total: ${total.toFixed(2)}</Text>
       <Button
-        title={loading ? 'Procesando...' : 'Realizar pedido'}
+        title={loading ? 'Procesando...' : 'Confirmar pedido'}
         onPress={handleOrder}
-        disabled={loading || cart.length === 0}
+        disabled={loading || items.length === 0}
       />
     </View>
   );
@@ -79,10 +103,20 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textAlign: 'center'
   },
+  businessName: {
+    fontSize: 18,
+    fontWeight: '500',
+    marginBottom: 12,
+    textAlign: 'center',
+    color: '#444',
+  },
   item: {
     padding: 12,
     borderBottomWidth: 1,
-    borderColor: '#eee'
+    borderColor: '#eee',
+    backgroundColor: '#fafafa',
+    borderRadius: 8,
+    marginBottom: 8,
   },
   itemText: {
     fontSize: 16

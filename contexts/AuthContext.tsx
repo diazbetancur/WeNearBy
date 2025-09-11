@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut
 } from 'firebase/auth';
-import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { auth } from '../services/firebase';
 
 interface AuthContextType {
@@ -30,25 +30,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return unsubscribe;
   }, []);
 
+  const errorMessages: Record<string, string> = {
+    'auth/invalid-email': 'Correo electrónico inválido',
+    'auth/user-not-found': 'Usuario no encontrado',
+    'auth/wrong-password': 'Contraseña incorrecta',
+    'auth/email-already-in-use': 'El correo ya está registrado',
+    'auth/weak-password': 'La contraseña es demasiado débil',
+    'auth/too-many-requests': 'Demasiados intentos. Intenta más tarde'
+    // Agrega más códigos de error aquí si lo necesitas
+  };
 
   function mapAuthError(error: any): string {
     const code = error?.code || '';
-    switch (code) {
-      case 'auth/invalid-email':
-        return 'Correo electrónico inválido.';
-      case 'auth/user-not-found':
-        return 'Usuario no encontrado.';
-      case 'auth/wrong-password':
-        return 'Contraseña incorrecta.';
-      case 'auth/email-already-in-use':
-        return 'El correo ya está registrado.';
-      case 'auth/weak-password':
-        return 'La contraseña es demasiado débil.';
-      case 'auth/too-many-requests':
-        return 'Demasiados intentos. Intenta más tarde.';
-      default:
-        return error?.message || 'Error desconocido.';
-    }
+    return errorMessages[code] || error?.message || 'Error desconocido.';
   }
 
   const signIn = async (email: string, password: string) => {
@@ -71,12 +65,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await signOut(auth);
   };
 
-  const value = useMemo(() => ({ currentUser, loading, signIn, signUp, logout }), [currentUser, loading]);
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({ currentUser, loading, signIn, signUp, logout }),
+    [currentUser, loading]
   );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

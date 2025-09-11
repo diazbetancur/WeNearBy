@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Button, FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { Button } from '../../components/ui/Button';
 import { useCart } from '../../contexts/CartContext';
-import { Business, getBusinessById } from '../../services/businessService';
+import { Business, getBusinessById, getProductsByBusiness } from '../../services/businessService';
 
-export default function BusinessProfileScreen({ route }: any) {
+export default function BusinessDetailScreen({ route }: any) {
   const { businessId } = route.params;
   const [business, setBusiness] = useState<Business | null>(null);
-  const { addItem } = useCart();
+  const [products, setProducts] = useState<any[]>([]);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     getBusinessById(businessId).then(setBusiness);
+    getProductsByBusiness(businessId).then(setProducts);
   }, [businessId]);
 
   if (!business) return <Text style={styles.loading}>Cargando...</Text>;
@@ -22,21 +25,10 @@ export default function BusinessProfileScreen({ route }: any) {
         <View style={styles.logoPlaceholder} />
       )}
       <Text style={styles.name}>{business.name}</Text>
-      <Text style={styles.sectionTitle}>Métodos de pago:</Text>
-      <View style={styles.paymentMethods}>
-        {business.paymentMethods && business.paymentMethods.length > 0 ? (
-          business.paymentMethods.map((method) => (
-            <Text key={method} style={styles.paymentMethod}>
-              {method}
-            </Text>
-          ))
-        ) : (
-          <Text style={styles.paymentMethod}>No definidos</Text>
-        )}
-      </View>
-      <Text style={styles.sectionTitle}>Productos:</Text>
+      <Text style={styles.description}>{business.description}</Text>
+      <Text style={styles.sectionTitle}>Productos</Text>
       <FlatList
-        data={business.products || []}
+        data={products}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.productItem}>
@@ -45,7 +37,7 @@ export default function BusinessProfileScreen({ route }: any) {
             </Text>
             <Button
               title="Agregar al carrito"
-              onPress={() => addItem({ ...item, quantity: 1, businessId: business.id })}
+              onPress={() => addToCart({ ...item, quantity: 1, businessId })}
             />
           </View>
         )}
@@ -88,25 +80,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 8
   },
+  description: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 16,
+    color: '#666'
+  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
     marginTop: 16,
     marginBottom: 8
-  },
-  paymentMethods: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 8
-  },
-  paymentMethod: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginRight: 8,
-    marginBottom: 4,
-    fontSize: 14
   },
   productItem: {
     marginBottom: 16,

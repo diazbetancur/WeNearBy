@@ -2,11 +2,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import BusinessDetailScreen from '../screens/BusinessDetailScreen';
 import BusinessListScreen from '../screens/BusinessListScreen';
 import BusinessProfileScreen from '../screens/BusinessProfileScreen';
 import CartScreen from '../screens/CartScreen';
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
+import { LoginScreen } from '../screens/LoginScreen';
+import { RegisterScreen } from '../screens/RegisterScreen';
 
 const AuthStack = createNativeStackNavigator();
 const MainStack = createNativeStackNavigator();
@@ -28,6 +29,7 @@ function MainStackScreen() {
   return (
     <MainStack.Navigator initialRouteName="BusinessList">
       <MainStack.Screen name="BusinessList" component={BusinessListScreen} />
+      <MainStack.Screen name="BusinessDetail" component={BusinessDetailScreen} />
       <MainStack.Screen name="BusinessProfile" component={BusinessProfileScreen} />
       <MainStack.Screen name="Cart" component={CartScreen} />
     </MainStack.Navigator>

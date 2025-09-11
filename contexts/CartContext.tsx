@@ -1,42 +1,114 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useReducer } from 'react';
+import { Alert } from 'react-native';
 
-type CartItem = {
+export interface CartItem {
   id: string;
   name: string;
   price: number;
   quantity: number;
-  businessId?: string;
+  businessId: string;
+}
+
+export interface CartState {
+  items: CartItem[];
+  businessId: string | null;
+}
+
+type CartAction =
+  | { type: 'ADD_ITEM'; payload: CartItem }
+  | { type: 'REMOVE_ITEM'; payload: string }
+  | { type: 'CLEAR_CART' };
+
+const initialState: CartState = {
+  items: [],
+  businessId: null
 };
 
-type CartContextType = {
-  cart: CartItem[];
-  addToCart: (item: CartItem) => void;
-  removeFromCart: (id: string) => void;
+function cartReducer(state: CartState, action: CartAction): CartState {
+  switch (action.type) {
+    case 'ADD_ITEM': {
+      if (!state.businessId) {
+        return {
+          items: [action.payload],
+          businessId: action.payload.businessId
+        };
+      }
+      if (state.businessId !== action.payload.businessId) {
+        return state;
+      }
+      const existing = state.items.find((item: CartItem) => item.id === action.payload.id);
+      if (existing) {
+        return {
+          items: state.items.map((item: CartItem) =>
+            item.id === action.payload.id
+              ? { ...item, quantity: item.quantity + action.payload.quantity }
+              : item
+          ),
+          businessId: state.businessId
+        };
+      }
+      return {
+        items: [...state.items, action.payload],
+        businessId: state.businessId
+      };
+    }
+    case 'REMOVE_ITEM': {
+      const filtered = state.items.filter((item: CartItem) => item.id !== action.payload);
+      return {
+        items: filtered,
+        businessId: filtered.length === 0 ? null : state.businessId
+      };
+    }
+    case 'CLEAR_CART':
+      return { items: [], businessId: null };
+    default:
+      return state;
+  }
+}
+
+interface CartContextType {
+  items: CartItem[];
+  businessId: string | null;
+  addItem: (item: CartItem) => void;
+  removeItem: (id: string) => void;
   clearCart: () => void;
-};
+}
 
 const CartContext = createContext<CartContextType>({
-  cart: [],
-  addToCart: () => {},
-  removeFromCart: () => {},
+  items: [],
+  businessId: null,
+  addItem: () => {},
+  removeItem: () => {},
   clearCart: () => {}
 });
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+export const CartProvider = ({ children }: { children: ReactNode }) => {
+  const [state, dispatch] = useReducer(cartReducer, initialState);
 
-  const addToCart = (item: CartItem) => {
-    setCart((prev) => [...prev, item]);
+  const addItem = (item: CartItem) => {
+    if (state.items.length > 0 && state.businessId && state.businessId !== item.businessId) {
+      Alert.alert('¿Cambiar de negocio?', 'Tu carrito actual se borrará. ¿Continuar?', [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Continuar',
+          onPress: () => {
+            dispatch({ type: 'CLEAR_CART' });
+            dispatch({ type: 'ADD_ITEM', payload: item });
+          }
+        }
+      ]);
+      return;
+    }
+    dispatch({ type: 'ADD_ITEM', payload: item });
   };
 
-  const removeFromCart = (id: string) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const clearCart = () => setCart([]);
+  const removeItem = (id: string) => dispatch({ type: 'REMOVE_ITEM', payload: id });
+  const clearCart = () => dispatch({ type: 'CLEAR_CART' });
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>
+    <CartContext.Provider
+      value={{ items: state.items, businessId: state.businessId, addItem, removeItem, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );

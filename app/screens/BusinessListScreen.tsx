@@ -18,7 +18,7 @@ export default function BusinessListScreen({ navigation }: any) {
   const renderItem = ({ item }: { item: Business }) => (
     <TouchableOpacity
       style={styles.item}
-      onPress={() => navigation.navigate('BusinessProfile', { businessId: item.id })}
+      onPress={() => navigation.navigate('BusinessDetail', { businessId: item.id })}
     >
       {item.logo ? (
         <Image source={{ uri: item.logo }} style={styles.logo} />
