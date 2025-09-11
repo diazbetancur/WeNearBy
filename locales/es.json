@@ -1,0 +1,29 @@
+{
+  "login": {
+    "title": "Iniciar Sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "button": "Entrar",
+    "register": "Registrarse",
+    "error": "Error al iniciar sesión"
+  },
+  "register": {
+    "title": "Registro",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "button": "Registrarse",
+    "back": "Volver a Login",
+    "error": "Error al registrar",
+    "passwordMismatch": "Las contraseñas no coinciden"
+  },
+  "businessList": {
+    "title": "Comercios Cercanos"
+  },
+  "cart": {
+    "title": "Carrito",
+    "empty": "No hay productos en el carrito.",
+    "total": "Total",
+    "order": "Realizar pedido"
+  }
+}

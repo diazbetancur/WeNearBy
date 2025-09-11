@@ -1,0 +1,29 @@
+{
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "button": "Sign In",
+    "register": "Register",
+    "error": "Login error"
+  },
+  "register": {
+    "title": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "button": "Register",
+    "back": "Back to Login",
+    "error": "Registration error",
+    "passwordMismatch": "Passwords do not match"
+  },
+  "businessList": {
+    "title": "Nearby Businesses"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "No products in the cart.",
+    "total": "Total",
+    "order": "Place order"
+  }
+}

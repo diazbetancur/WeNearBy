@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
   signOut
 } from 'firebase/auth';
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { auth } from '../services/firebase';
 
 interface AuthContextType {
@@ -30,20 +30,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return unsubscribe;
   }, []);
 
+
+  function mapAuthError(error: any): string {
+    const code = error?.code || '';
+    switch (code) {
+      case 'auth/invalid-email':
+        return 'Correo electrónico inválido.';
+      case 'auth/user-not-found':
+        return 'Usuario no encontrado.';
+      case 'auth/wrong-password':
+        return 'Contraseña incorrecta.';
+      case 'auth/email-already-in-use':
+        return 'El correo ya está registrado.';
+      case 'auth/weak-password':
+        return 'La contraseña es demasiado débil.';
+      case 'auth/too-many-requests':
+        return 'Demasiados intentos. Intenta más tarde.';
+      default:
+        return error?.message || 'Error desconocido.';
+    }
+  }
+
   const signIn = async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
+      throw new Error(mapAuthError(error));
+    }
   };
 
   const signUp = async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
+      throw new Error(mapAuthError(error));
+    }
   };
 
   const logout = async () => {
     await signOut(auth);
   };
 
+  const value = useMemo(() => ({ currentUser, loading, signIn, signUp, logout }), [currentUser, loading]);
   return (
-    <AuthContext.Provider value={{ currentUser, loading, signIn, signUp, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
