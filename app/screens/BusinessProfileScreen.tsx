@@ -1,18 +1,23 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Button, FlatList, Image, StyleSheet, Text, View } from 'react-native';
 import { CartContext } from '../../contexts/CartContext.js';
-import { Business, getBusinessById } from '../../services/businessService';
+import { useTranslation } from '../../hooks/useTranslation';
+import { getBusinessById, getProductsByBusiness } from '../../services/firestore.js';
+import { colors } from '../../theme/colors.js';
 
-export default function BusinessProfileScreen({ route }: any) {
+export default function BusinessProfileScreen({ route }) {
   const { businessId, businessName: navBusinessName } = route.params;
-  const [business, setBusiness] = useState<Business | null>(null);
+  const [business, setBusiness] = useState(null);
+  const [products, setProducts] = useState([]);
   const { addItem } = useContext(CartContext);
+  const { t } = useTranslation();
 
   useEffect(() => {
     getBusinessById(businessId).then(setBusiness);
+    getProductsByBusiness(businessId).then(setProducts);
   }, [businessId]);
 
-  if (!business) return <Text style={styles.loading}>Cargando...</Text>;
+  if (!business) return <Text style={styles.loading}>{t('business.loading')}</Text>;
 
   return (
     <View style={styles.container}>
@@ -22,7 +27,7 @@ export default function BusinessProfileScreen({ route }: any) {
         <View style={styles.logoPlaceholder} />
       )}
       <Text style={styles.name}>{navBusinessName || business.name}</Text>
-      <Text style={styles.sectionTitle}>Métodos de pago:</Text>
+      <Text style={styles.sectionTitle}>{t('business.payment_methods')}</Text>
       <View style={styles.paymentMethods}>
         {business.paymentMethods && business.paymentMethods.length > 0 ? (
           business.paymentMethods.map((method) => (
@@ -31,12 +36,12 @@ export default function BusinessProfileScreen({ route }: any) {
             </Text>
           ))
         ) : (
-          <Text style={styles.paymentMethod}>No definidos</Text>
+          <Text style={styles.paymentMethod}>{t('business.no_payment_methods')}</Text>
         )}
       </View>
-      <Text style={styles.sectionTitle}>Productos:</Text>
+      <Text style={styles.sectionTitle}>{t('business.products')}</Text>
       <FlatList
-        data={business.products || []}
+        data={products}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.productItem}>
@@ -44,12 +49,13 @@ export default function BusinessProfileScreen({ route }: any) {
               {item.name} - ${item.price}
             </Text>
             <Button
-              title="Agregar al carrito"
+              title={t('business.add_to_cart')}
               onPress={() => addItem({ ...item, quantity: 1 }, business.id)}
             />
           </View>
         )}
         contentContainerStyle={{ paddingBottom: 24 }}
+        ListEmptyComponent={<Text style={styles.empty}>{t('business.no_products')}</Text>}
       />
     </View>
   );
@@ -59,12 +65,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff'
+    backgroundColor: colors.background
   },
   loading: {
     marginTop: 32,
     textAlign: 'center',
-    fontSize: 18
+    fontSize: 18,
+    color: colors.textSecondary
   },
   logo: {
     width: 96,
@@ -72,7 +79,7 @@ const styles = StyleSheet.create({
     borderRadius: 48,
     alignSelf: 'center',
     marginBottom: 16,
-    backgroundColor: '#eee'
+    backgroundColor: colors.surface
   },
   logoPlaceholder: {
     width: 96,
@@ -80,19 +87,21 @@ const styles = StyleSheet.create({
     borderRadius: 48,
     alignSelf: 'center',
     marginBottom: 16,
-    backgroundColor: '#eee'
+    backgroundColor: colors.surface
   },
   name: {
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 8
+    marginBottom: 8,
+    color: colors.primary
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
     marginTop: 16,
-    marginBottom: 8
+    marginBottom: 8,
+    color: colors.secondary
   },
   paymentMethods: {
     flexDirection: 'row',
@@ -101,19 +110,26 @@ const styles = StyleSheet.create({
   },
   paymentMethod: {
     fontSize: 15,
-    color: '#666',
+    color: colors.textSecondary,
     marginRight: 12
   },
   productItem: {
     marginBottom: 16,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: colors.border,
     borderRadius: 8,
-    backgroundColor: '#fafafa'
+    backgroundColor: colors.surface
   },
   productName: {
     fontSize: 16,
-    marginBottom: 8
+    marginBottom: 8,
+    color: colors.text
+  },
+  empty: {
+    textAlign: 'center',
+    color: colors.textSecondary,
+    marginTop: 32,
+    fontSize: 16
   }
 });

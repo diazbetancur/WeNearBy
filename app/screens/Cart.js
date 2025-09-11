@@ -1,40 +1,43 @@
-import { addDoc, collection } from 'firebase/firestore';
 import { useContext, useState } from 'react';
 import { Alert, Button, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { CartContext } from '../../contexts/CartContext.js';
-import { db } from '../../services/firebase';
+import { useTranslation } from '../../hooks/useTranslation';
+import { addDocument } from '../../services/firestore.js';
+import { colors } from '../../theme/colors.js';
 
 export default function Cart({ navigation }) {
   const { items, businessId, clearCart } = useContext(CartContext);
-  const { currentUser } = useAuth ? useAuth() : { currentUser: null };
+  const { currentUser } = useAuth();
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   const handleConfirm = async () => {
     if (!currentUser) {
-      Alert.alert('Debes iniciar sesión para confirmar el pedido');
+      Alert.alert(t('cart.login_required'));
       return;
     }
     if (!businessId || items.length === 0) {
-      Alert.alert('El carrito está vacío');
+      Alert.alert(t('cart.empty'));
       return;
     }
     setLoading(true);
     try {
-      await addDoc(collection(db, 'orders'), {
+      await addDocument('orders', {
         businessId,
         customerId: currentUser.uid,
         products: items,
         total,
-        status: 'pending'
+        status: 'pending',
+        timestamp: new Date()
       });
       clearCart();
-      Alert.alert('Pedido confirmado', 'Tu pedido ha sido registrado exitosamente.');
+      Alert.alert(t('cart.success_title'), t('cart.success_message'));
       if (navigation) navigation.navigate('BusinessList');
-    } catch (e) {
-      Alert.alert('Error', 'No se pudo guardar el pedido.');
+    } catch (_e) {
+      Alert.alert(t('cart.error_title'), t('cart.error_message'));
     } finally {
       setLoading(false);
     }
@@ -43,32 +46,40 @@ export default function Cart({ navigation }) {
   if (items.length === 0) {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Carrito vacío</Text>
-        <Text style={styles.empty}>No hay productos en el carrito.</Text>
-        <Button title="Volver" onPress={() => navigation && navigation.navigate('BusinessList')} />
+        <Text style={styles.title}>{t('cart.empty_title')}</Text>
+        <Text style={styles.empty}>{t('cart.empty')}</Text>
+        <Button
+          title={t('cart.back_button')}
+          onPress={() => navigation && navigation.navigate('BusinessList')}
+        />
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Carrito</Text>
+      <Text style={styles.title}>{t('cart.title')}</Text>
       <FlatList
         data={items}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.item}>
             <Text style={styles.itemText}>
-              {item.name} x{item.quantity} - ${item.price} c/u
+              {item.name} x{item.quantity} - ${item.price} {t('cart.unit')}
             </Text>
-            <Text style={styles.itemText}>Subtotal: ${item.price * item.quantity}</Text>
+            <Text style={styles.itemText}>
+              {t('cart.subtotal')}: ${item.price * item.quantity}
+            </Text>
           </View>
         )}
         contentContainerStyle={{ paddingBottom: 24 }}
+        ListEmptyComponent={<Text style={styles.empty}>{t('cart.empty')}</Text>}
       />
-      <Text style={styles.total}>Total: ${total.toFixed(2)}</Text>
+      <Text style={styles.total}>
+        {t('cart.total')}: ${total.toFixed(2)}
+      </Text>
       <Button
-        title={loading ? 'Procesando...' : 'Confirmar pedido'}
+        title={loading ? t('cart.processing') : t('cart.confirm_button')}
         onPress={handleConfirm}
         disabled={loading || items.length === 0}
       />
@@ -80,34 +91,37 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#fff'
+    backgroundColor: colors.background
   },
   title: {
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 16,
-    textAlign: 'center'
+    textAlign: 'center',
+    color: colors.primary
   },
   item: {
     padding: 12,
     borderBottomWidth: 1,
-    borderColor: '#eee',
-    backgroundColor: '#fafafa',
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
     borderRadius: 8,
     marginBottom: 8
   },
   itemText: {
-    fontSize: 16
+    fontSize: 16,
+    color: colors.text
   },
   total: {
     fontSize: 18,
     fontWeight: 'bold',
     marginVertical: 16,
-    textAlign: 'right'
+    textAlign: 'right',
+    color: colors.secondary
   },
   empty: {
     textAlign: 'center',
-    color: '#888',
+    color: colors.textSecondary,
     marginTop: 32,
     fontSize: 16
   }
