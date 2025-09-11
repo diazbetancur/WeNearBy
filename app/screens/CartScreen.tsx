@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Button, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
-import { createOrder } from '../../services/orderService';
 import { getBusinessById } from '../../services/businessService';
+import { createOrder } from '../../services/orderService';
 
 export default function CartScreen({ navigation }: any) {
   const { items, businessId, clearCart } = useCart();
@@ -37,9 +37,9 @@ export default function CartScreen({ navigation }: any) {
         businessId: businessId || '',
         products: items,
         total,
-  status: 'pending' as const,
+        status: 'pending' as const,
         paymentMethod: 'cash',
-  deliveryType: 'pickup' as const
+        deliveryType: 'pickup' as const
       };
       await createOrder(orderData);
       clearCart();
@@ -74,9 +74,7 @@ export default function CartScreen({ navigation }: any) {
             <Text style={styles.itemText}>
               {item.name} x{item.quantity} - ${item.price} c/u
             </Text>
-            <Text style={styles.itemText}>
-              Subtotal: ${item.price * item.quantity}
-            </Text>
+            <Text style={styles.itemText}>Subtotal: ${item.price * item.quantity}</Text>
           </View>
         )}
         contentContainerStyle={{ paddingBottom: 24 }}
@@ -108,7 +106,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginBottom: 12,
     textAlign: 'center',
-    color: '#444',
+    color: '#444'
   },
   item: {
     padding: 12,
@@ -116,7 +114,7 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
     backgroundColor: '#fafafa',
     borderRadius: 8,
-    marginBottom: 8,
+    marginBottom: 8
   },
   itemText: {
     fontSize: 16
