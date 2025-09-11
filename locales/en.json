@@ -29,13 +29,41 @@
     "passwords_no_match": "Passwords do not match"
   },
   "businessList": {
-    "title": "Nearby Businesses"
+    "title": "Nearby Businesses",
+    "empty": "No businesses available at the moment.",
+    "loading": "Loading businesses...",
+    "error": "Error loading businesses",
+    "retry": "Retry"
+  },
+  "business": {
+    "title": "Business",
+    "no_products": "This business has no products available.",
+    "add_to_cart": "Add to cart",
+    "view_cart": "View cart",
+    "contact": "Contact",
+    "hours": "Hours",
+    "address": "Address",
+    "phone": "Phone",
+    "loading": "Loading products...",
+    "error_loading_products": "Error loading products",
+    "price": "Price"
   },
   "cart": {
     "title": "Cart",
     "empty": "No products in the cart.",
+    "empty_title": "Empty Cart",
     "total": "Total",
-    "order": "Place order"
+    "order": "Place order",
+    "processing": "Processing...",
+    "login_required": "You must log in to place an order",
+    "success_title": "Order placed!",
+    "success_message": "Your order has been processed successfully",
+    "error_title": "Error",
+    "error_message": "Could not process the order. Please try again.",
+    "back_button": "Back to businesses",
+    "confirm_button": "Confirm order",
+    "unit": "each",
+    "subtotal": "Subtotal"
   },
   "tabs": {
     "home": "Home",

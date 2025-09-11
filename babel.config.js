@@ -14,7 +14,11 @@ module.exports = function (api) {
             '@constants': './constants',
             '@hooks': './hooks',
             '@services': './services',
-            '@contexts': './contexts'
+            '@contexts': './contexts',
+            // Modular architecture aliases
+            '@customer': './src/modules/customer',
+            '@business': './src/modules/business',
+            '@shared': './src/shared'
           }
         }
       ]

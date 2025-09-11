@@ -29,13 +29,41 @@
     "passwords_no_match": "Las contraseñas no coinciden"
   },
   "businessList": {
-    "title": "Comercios Cercanos"
+    "title": "Comercios Cercanos",
+    "empty": "No hay comercios disponibles en este momento.",
+    "loading": "Cargando comercios...",
+    "error": "Error al cargar comercios",
+    "retry": "Reintentar"
+  },
+  "business": {
+    "title": "Comercio",
+    "no_products": "Este comercio no tiene productos disponibles.",
+    "add_to_cart": "Agregar al carrito",
+    "view_cart": "Ver carrito",
+    "contact": "Contactar",
+    "hours": "Horarios",
+    "address": "Dirección",
+    "phone": "Teléfono",
+    "loading": "Cargando productos...",
+    "error_loading_products": "Error al cargar productos",
+    "price": "Precio"
   },
   "cart": {
     "title": "Carrito",
     "empty": "No hay productos en el carrito.",
+    "empty_title": "Carrito Vacío",
     "total": "Total",
-    "order": "Realizar pedido"
+    "order": "Realizar pedido",
+    "processing": "Procesando...",
+    "login_required": "Debes iniciar sesión para hacer un pedido",
+    "success_title": "¡Pedido realizado!",
+    "success_message": "Tu pedido ha sido procesado exitosamente",
+    "error_title": "Error",
+    "error_message": "No se pudo procesar el pedido. Intenta nuevamente.",
+    "back_button": "Volver a comercios",
+    "confirm_button": "Confirmar pedido",
+    "unit": "c/u",
+    "subtotal": "Subtotal"
   },
   "tabs": {
     "home": "Inicio",

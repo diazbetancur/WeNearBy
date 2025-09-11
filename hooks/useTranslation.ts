@@ -13,13 +13,13 @@ i18n.locale = deviceLocale;
 // Función personalizada para traducir con warnings
 const translateWithWarning = (key: string, options?: any) => {
   const translation = i18n.translate(key, options);
-  
+
   // Si la traducción retorna la key significa que no se encontró
   if (translation === key || translation.includes('[missing')) {
     console.warn(`🚨 Translation missing for key: "${key}" in locale: "${i18n.locale}"`);
     return `[Missing: ${key}]`;
   }
-  
+
   return translation;
 };
 
