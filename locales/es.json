@@ -5,7 +5,11 @@
     "password": "Contraseña",
     "button": "Entrar",
     "register": "Registrarse",
-    "error": "Error al iniciar sesión"
+    "error": "Error al iniciar sesión",
+    "empty_fields": "Por favor ingresa correo y contraseña."
+    "email_required": "El email es requerido",
+    "email_invalid": "El email no es válido",
+    "password_required": "La contraseña es requerida"
   },
   "register": {
     "title": "Registro",
@@ -15,7 +19,14 @@
     "button": "Registrarse",
     "back": "Volver a Login",
     "error": "Error al registrar",
-    "passwordMismatch": "Las contraseñas no coinciden"
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "empty_fields": "Por favor completa todos los campos."
+    "email_required": "El email es requerido",
+    "email_invalid": "El email no es válido",
+    "password_required": "La contraseña es requerida",
+    "password_short": "La contraseña debe tener al menos 6 caracteres",
+    "confirm_required": "La confirmación es requerida",
+    "passwords_no_match": "Las contraseñas no coinciden"
   },
   "businessList": {
     "title": "Comercios Cercanos"

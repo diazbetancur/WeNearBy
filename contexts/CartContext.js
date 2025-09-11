@@ -50,7 +50,7 @@ function cartReducer(state, action) {
   }
 }
 
-const CartContext = createContext({
+export const CartContext = createContext({
   businessId: null,
   items: [],
   addItem: () => {},

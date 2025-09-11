@@ -5,22 +5,52 @@ import { Input } from '../../components/ui/Input';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from '../../hooks/useTranslation';
 
+const validateEmail = (email: string) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+};
+
 export function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const { signIn } = useAuth();
   const { t } = useTranslation();
 
+  const validate = () => {
+    let valid = true;
+    if (!email) {
+      setEmailError(t('login.email_required'));
+      valid = false;
+    } else if (!validateEmail(email)) {
+      setEmailError(t('login.email_invalid'));
+      valid = false;
+    } else {
+      setEmailError('');
+    }
+    if (!password) {
+      setPasswordError(t('login.password_required'));
+      valid = false;
+    } else {
+      setPasswordError('');
+    }
+    return valid;
+  };
+
   const handleLogin = async () => {
-    setError('');
+    setSubmitError('');
+    if (!validate()) return;
     try {
       await signIn(email, password);
       navigation.replace('BusinessList');
     } catch (e: any) {
-      setError(e.message || t('login.error'));
+      setSubmitError(e.message || t('login.error'));
     }
   };
+
+  const isFormValid = email && password && !emailError && !passwordError;
 
   return (
     <View style={styles.container}>
@@ -28,24 +58,32 @@ export function LoginScreen({ navigation }: any) {
         label={t('login.email')}
         placeholder={t('login.email')}
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(text) => {
+          setEmail(text);
+          if (emailError) setEmailError('');
+        }}
         autoCapitalize="none"
         keyboardType="email-address"
+        error={emailError}
       />
       <Input
         label={t('login.password')}
         placeholder={t('login.password')}
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(text) => {
+          setPassword(text);
+          if (passwordError) setPasswordError('');
+        }}
         secureTextEntry
+        error={passwordError}
       />
-      <UIButton title={t('login.button')} onPress={handleLogin} />
+      <UIButton title={t('login.button')} onPress={handleLogin} disabled={!isFormValid} />
       <UIButton
         title={t('login.register')}
         variant="secondary"
         onPress={() => navigation.navigate('Register')}
       />
-      {error ? <Input error={error} editable={false} /> : null}
+      {submitError ? <Input error={submitError} editable={false} /> : null}
     </View>
   );
 }

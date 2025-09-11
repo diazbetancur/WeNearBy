@@ -3,14 +3,15 @@
 
 const colors = {
   // Principales
-  primary: '#2D9CDB', // Azul principal
-  secondary: '#27AE60', // Verde secundario
+  primary: '#3DDC97', // Verde Menta principal
+  secondary: '#2563EB', // Azul Digital secundario
+  accent: '#F97316', // Naranja Acente
 
   // Neutros
   background: '#F9FAFB', // Fondo general
   surface: '#FFFFFF', // Superficies
   text: '#222B45', // Texto principal
-  textSecondary: '#6E7A8A', // Texto secundario
+  textSecondary: '#6B7280', // Texto secundario
   border: '#E0E0E0', // Bordes y líneas
 
   // Estados

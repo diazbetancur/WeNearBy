@@ -1,58 +1,110 @@
 import React, { useState } from 'react';
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
+import { Input } from '../../components/ui/Input';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTranslation } from '../../hooks/useTranslation';
+
+const validateEmail = (email: string) => {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+};
 
 export function RegisterScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmError, setConfirmError] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const { signUp } = useAuth();
   const { t } = useTranslation();
 
-  const handleRegister = async () => {
-    setError('');
-    if (password !== confirmPassword) {
-      setError(t('register.passwords_no_match'));
-      return;
+  const validate = () => {
+    let valid = true;
+    if (!email) {
+      setEmailError(t('register.email_required'));
+      valid = false;
+    } else if (!validateEmail(email)) {
+      setEmailError(t('register.email_invalid'));
+      valid = false;
+    } else {
+      setEmailError('');
     }
+    if (!password) {
+      setPasswordError(t('register.password_required'));
+      valid = false;
+    } else if (password.length < 6) {
+      setPasswordError(t('register.password_short'));
+      valid = false;
+    } else {
+      setPasswordError('');
+    }
+    if (!confirmPassword) {
+      setConfirmError(t('register.confirm_required'));
+      valid = false;
+    } else if (password !== confirmPassword) {
+      setConfirmError(t('register.passwords_no_match'));
+      valid = false;
+    } else {
+      setConfirmError('');
+    }
+    return valid;
+  };
+
+  const handleRegister = async () => {
+    setSubmitError('');
+    if (!validate()) return;
     try {
       await signUp(email, password);
       navigation.replace('Login');
     } catch (e: any) {
-      setError(e.message || t('register.error'));
+      setSubmitError(e.message || t('register.error'));
     }
   };
 
+  const isFormValid =
+    email && password && confirmPassword && !emailError && !passwordError && !confirmError;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t('register.title')}</Text>
-      <TextInput
-        style={styles.input}
+      <Input
+        label={t('register.email')}
         placeholder={t('register.email')}
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(text) => {
+          setEmail(text);
+          if (emailError) setEmailError('');
+        }}
         autoCapitalize="none"
         keyboardType="email-address"
+        error={emailError}
       />
-      <TextInput
-        style={styles.input}
+      <Input
+        label={t('register.password')}
         placeholder={t('register.password')}
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(text) => {
+          setPassword(text);
+          if (passwordError) setPasswordError('');
+        }}
         secureTextEntry
+        error={passwordError}
       />
-      <TextInput
-        style={styles.input}
-        placeholder={t('register.confirm_password')}
+      <Input
+        label={t('register.confirmPassword')}
+        placeholder={t('register.confirmPassword')}
         value={confirmPassword}
-        onChangeText={setConfirmPassword}
+        onChangeText={(text) => {
+          setConfirmPassword(text);
+          if (confirmError) setConfirmError('');
+        }}
         secureTextEntry
+        error={confirmError}
       />
-      <Button title={t('register.button')} onPress={handleRegister} />
-      <Button title={t('register.back_to_login')} onPress={() => navigation.goBack()} />
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      <Button title={t('register.button')} onPress={handleRegister} disabled={!isFormValid} />
+      <Button title={t('register.back')} onPress={() => navigation.goBack()} />
+      {submitError ? <Input error={submitError} editable={false} /> : null}
     </View>
   );
 }

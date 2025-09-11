@@ -1,57 +1,80 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import { CartContext } from '../../contexts/CartContext.js';
 import { useTranslation } from '../../hooks/useTranslation';
-import { getBusinessById, getProductsByBusiness } from '../../services/firestore.js';
+import { getProductsByBusiness } from '../../services/firestore.js';
 import { colors } from '../../theme/colors.js';
 
 export default function BusinessProfileScreen({ route }) {
   const { businessId, businessName: navBusinessName } = route.params;
-  const [business, setBusiness] = useState(null);
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const { addItem } = useContext(CartContext);
   const { t } = useTranslation();
 
   useEffect(() => {
-    getBusinessById(businessId).then(setBusiness);
-    getProductsByBusiness(businessId).then(setProducts);
-  }, [businessId]);
+    setLoading(true);
+    setError('');
+    getProductsByBusiness(businessId)
+      .then(setProducts)
+      .catch((err) => {
+        setError(t('business.error_loading_products'));
+        console.error('Error loading products:', err);
+      })
+      .finally(() => setLoading(false));
+  }, [businessId, t]);
 
-  if (!business) return <Text style={styles.loading}>{t('business.loading')}</Text>;
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={styles.loading}>{t('business.loading')}</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.error}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
-      {business.logo ? (
-        <Image source={{ uri: business.logo }} style={styles.logo} />
-      ) : (
-        <View style={styles.logoPlaceholder} />
-      )}
-      <Text style={styles.name}>{navBusinessName || business.name}</Text>
-      <Text style={styles.sectionTitle}>{t('business.payment_methods')}</Text>
-      <View style={styles.paymentMethods}>
-        {business.paymentMethods && business.paymentMethods.length > 0 ? (
-          business.paymentMethods.map((method) => (
-            <Text key={method} style={styles.paymentMethod}>
-              {method}
-            </Text>
-          ))
-        ) : (
-          <Text style={styles.paymentMethod}>{t('business.no_payment_methods')}</Text>
-        )}
-      </View>
-      <Text style={styles.sectionTitle}>{t('business.products')}</Text>
+      <Text style={styles.title}>{navBusinessName || t('business.title')}</Text>
       <FlatList
         data={products}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.productItem}>
-            <Text style={styles.productName}>
-              {item.name} - ${item.price}
-            </Text>
-            <Button
-              title={t('business.add_to_cart')}
-              onPress={() => addItem({ ...item, quantity: 1 }, business.id)}
-            />
+            {item.image ? (
+              <Image source={{ uri: item.image }} style={styles.productImage} />
+            ) : (
+              <View style={styles.imagePlaceholder} />
+            )}
+            <View style={styles.productInfo}>
+              <Text style={styles.productName}>{item.name}</Text>
+              <Text style={styles.productPrice}>
+                {t('business.price')}: ${item.price}
+              </Text>
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => addItem({ ...item, quantity: 1 }, businessId)}
+              >
+                <Text style={styles.addButtonText}>{t('business.add_to_cart')}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
         contentContainerStyle={{ paddingBottom: 24 }}
@@ -67,64 +90,80 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: colors.background
   },
-  loading: {
-    marginTop: 32,
-    textAlign: 'center',
-    fontSize: 18,
-    color: colors.textSecondary
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.background
   },
-  logo: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    alignSelf: 'center',
-    marginBottom: 16,
-    backgroundColor: colors.surface
-  },
-  logoPlaceholder: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    alignSelf: 'center',
-    marginBottom: 16,
-    backgroundColor: colors.surface
-  },
-  name: {
+  title: {
     fontSize: 24,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 8,
-    color: colors.primary
+    color: colors.primary,
+    marginBottom: 16,
+    textAlign: 'center'
   },
-  sectionTitle: {
+  loading: {
     fontSize: 18,
-    fontWeight: '600',
-    marginTop: 16,
-    marginBottom: 8,
-    color: colors.secondary
-  },
-  paymentMethods: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: 12
-  },
-  paymentMethod: {
-    fontSize: 15,
     color: colors.textSecondary,
-    marginRight: 12
+    marginTop: 12,
+    textAlign: 'center'
+  },
+  error: {
+    color: colors.error,
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 24
   },
   productItem: {
-    marginBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 12,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 8,
-    backgroundColor: colors.surface
+    backgroundColor: colors.surface,
+    marginBottom: 16
+  },
+  productImage: {
+    width: 64,
+    height: 64,
+    borderRadius: 8,
+    marginRight: 16,
+    backgroundColor: colors.background
+  },
+  imagePlaceholder: {
+    width: 64,
+    height: 64,
+    borderRadius: 8,
+    marginRight: 16,
+    backgroundColor: colors.disabled
+  },
+  productInfo: {
+    flex: 1
   },
   productName: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: colors.text,
+    marginBottom: 4
+  },
+  productPrice: {
     fontSize: 16,
-    marginBottom: 8,
-    color: colors.text
+    color: colors.secondary,
+    marginBottom: 8
+  },
+  addButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 6,
+    alignSelf: 'flex-start'
+  },
+  addButtonText: {
+    color: colors.surface,
+    fontWeight: 'bold',
+    fontSize: 16
   },
   empty: {
     textAlign: 'center',

@@ -74,7 +74,7 @@ interface CartContextType {
   clearCart: () => void;
 }
 
-const CartContext = createContext<CartContextType>({
+export const CartContext = createContext<CartContextType>({
   items: [],
   businessId: null,
   addItem: () => {},

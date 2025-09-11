@@ -1,9 +1,11 @@
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { useContext, useState } from 'react';
-import { Alert, Button, FlatList, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Button, FlatList, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
 import { CartContext } from '../../contexts/CartContext.js';
 import { useTranslation } from '../../hooks/useTranslation';
-import { addDocument } from '../../services/firestore.js';
+import { db } from '../../services/firebase';
+
 import { colors } from '../../theme/colors.js';
 
 export default function Cart({ navigation }) {
@@ -25,23 +27,34 @@ export default function Cart({ navigation }) {
     }
     setLoading(true);
     try {
-      await addDocument('orders', {
+      const orderRef = doc(db, 'orders', `${Date.now()}_${currentUser.uid}`);
+      await setDoc(orderRef, {
         businessId,
         customerId: currentUser.uid,
-        products: items,
+        products: items.map(({ id, name, price, quantity }) => ({ id, name, price, quantity })),
         total,
         status: 'pending',
-        timestamp: new Date()
+        timestamp: serverTimestamp()
       });
       clearCart();
       Alert.alert(t('cart.success_title'), t('cart.success_message'));
       if (navigation) navigation.navigate('BusinessList');
-    } catch (_e) {
+    } catch (e) {
+      console.error('Error saving order:', e);
       Alert.alert(t('cart.error_title'), t('cart.error_message'));
     } finally {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={styles.title}>{t('cart.processing')}</Text>
+      </View>
+    );
+  }
 
   if (items.length === 0) {
     return (
