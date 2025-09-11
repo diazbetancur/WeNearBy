@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTranslation } from '../../hooks/useTranslation';
 
 export function RegisterScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
@@ -8,27 +9,28 @@ export function RegisterScreen({ navigation }: any) {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const { signUp } = useAuth();
+  const { t } = useTranslation();
 
   const handleRegister = async () => {
     setError('');
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      setError(t('register.passwords_no_match'));
       return;
     }
     try {
       await signUp(email, password);
       navigation.replace('Login');
     } catch (e: any) {
-      setError(e.message || 'Error al registrar');
+      setError(e.message || t('register.error'));
     }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Registro</Text>
+      <Text style={styles.title}>{t('register.title')}</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder={t('register.email')}
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
@@ -36,20 +38,20 @@ export function RegisterScreen({ navigation }: any) {
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder={t('register.password')}
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
       <TextInput
         style={styles.input}
-        placeholder="Confirmar Password"
+        placeholder={t('register.confirm_password')}
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
       />
-      <Button title="Registrarse" onPress={handleRegister} />
-      <Button title="Volver a Login" onPress={() => navigation.goBack()} />
+      <Button title={t('register.button')} onPress={handleRegister} />
+      <Button title={t('register.back_to_login')} onPress={() => navigation.goBack()} />
       {error ? <Text style={styles.error}>{error}</Text> : null}
     </View>
   );

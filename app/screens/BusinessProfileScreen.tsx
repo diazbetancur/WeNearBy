@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, FlatList, Image, StyleSheet, Text, View } from 'react-native';
-import { useCart } from '../../contexts/CartContext';
+import { CartContext } from '../../contexts/CartContext.js';
 import { Business, getBusinessById } from '../../services/businessService';
 
 export default function BusinessProfileScreen({ route }: any) {
-  const { businessId } = route.params;
+  const { businessId, businessName: navBusinessName } = route.params;
   const [business, setBusiness] = useState<Business | null>(null);
-  const { addItem } = useCart();
+  const { addItem } = useContext(CartContext);
 
   useEffect(() => {
     getBusinessById(businessId).then(setBusiness);
@@ -21,7 +21,7 @@ export default function BusinessProfileScreen({ route }: any) {
       ) : (
         <View style={styles.logoPlaceholder} />
       )}
-      <Text style={styles.name}>{business.name}</Text>
+      <Text style={styles.name}>{navBusinessName || business.name}</Text>
       <Text style={styles.sectionTitle}>Métodos de pago:</Text>
       <View style={styles.paymentMethods}>
         {business.paymentMethods && business.paymentMethods.length > 0 ? (
@@ -45,7 +45,7 @@ export default function BusinessProfileScreen({ route }: any) {
             </Text>
             <Button
               title="Agregar al carrito"
-              onPress={() => addItem({ ...item, quantity: 1, businessId: business.id })}
+              onPress={() => addItem({ ...item, quantity: 1 }, business.id)}
             />
           </View>
         )}
@@ -97,16 +97,12 @@ const styles = StyleSheet.create({
   paymentMethods: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 8
+    marginBottom: 12
   },
   paymentMethod: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    marginRight: 8,
-    marginBottom: 4,
-    fontSize: 14
+    fontSize: 15,
+    color: '#666',
+    marginRight: 12
   },
   productItem: {
     marginBottom: 16,
