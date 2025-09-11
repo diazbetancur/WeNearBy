@@ -1,9 +1,14 @@
 import { StyleSheet } from 'react-native';
 
 import ParallaxScrollView from '@/components/parallax-scroll-view';
+import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function TabTwoScreen() {
+  const { t } = useTranslation();
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
@@ -15,7 +20,14 @@ export default function TabTwoScreen() {
           style={styles.headerImage}
         />
       }
-    ></ParallaxScrollView>
+    >
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText type="title">{t('explore.title')}</ThemedText>
+      </ThemedView>
+      <ThemedView>
+        <ThemedText type="subtitle">{t('explore.subtitle')}</ThemedText>
+      </ThemedView>
+    </ParallaxScrollView>
   );
 }
 

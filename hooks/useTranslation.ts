@@ -10,6 +10,19 @@ const i18n = new I18n({ en, es });
 i18n.enableFallback = true;
 i18n.locale = deviceLocale;
 
+// Función personalizada para traducir con warnings
+const translateWithWarning = (key: string, options?: any) => {
+  const translation = i18n.translate(key, options);
+  
+  // Si la traducción retorna la key significa que no se encontró
+  if (translation === key || translation.includes('[missing')) {
+    console.warn(`🚨 Translation missing for key: "${key}" in locale: "${i18n.locale}"`);
+    return `[Missing: ${key}]`;
+  }
+  
+  return translation;
+};
+
 export function useTranslation() {
   const [locale, setLocale] = useState(i18n.locale);
 
@@ -18,7 +31,7 @@ export function useTranslation() {
   }, [locale]);
 
   return {
-    t: i18n.translate.bind(i18n),
+    t: translateWithWarning,
     locale,
     setLocale
   };

@@ -36,5 +36,48 @@
     "empty": "No hay productos en el carrito.",
     "total": "Total",
     "order": "Realizar pedido"
+  },
+  "tabs": {
+    "home": "Inicio",
+    "explore": "Explorar",
+    "profile": "Perfil",
+    "businesses": "Comercios"
+  },
+  "home": {
+    "title": "Bienvenido",
+    "subtitle": "Encuentra comercios cerca de ti",
+    "search_placeholder": "Buscar comercios..."
+  },
+  "explore": {
+    "title": "Explorar",
+    "subtitle": "Descubre nuevos lugares",
+    "categories": "Categorías",
+    "nearby": "Cerca de ti"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "search": "Buscar",
+    "retry": "Reintentar",
+    "ok": "Ok",
+    "yes": "Sí",
+    "no": "No",
+    "close": "Cerrar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "refresh": "Actualizar"
+  },
+  "errors": {
+    "network": "Error de conexión. Verifica tu internet.",
+    "server": "Error del servidor. Intenta más tarde.",
+    "unknown": "Ha ocurrido un error inesperado.",
+    "required_field": "Este campo es requerido",
+    "invalid_format": "Formato inválido"
   }
 }

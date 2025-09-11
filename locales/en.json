@@ -5,7 +5,11 @@
     "password": "Password",
     "button": "Sign In",
     "register": "Register",
-    "error": "Login error"
+    "error": "Login error",
+    "empty_fields": "Please enter email and password.",
+    "email_required": "Email is required",
+    "email_invalid": "Email is not valid",
+    "password_required": "Password is required"
   },
   "register": {
     "title": "Register",
@@ -15,7 +19,14 @@
     "button": "Register",
     "back": "Back to Login",
     "error": "Registration error",
-    "passwordMismatch": "Passwords do not match"
+    "passwordMismatch": "Passwords do not match",
+    "empty_fields": "Please complete all fields.",
+    "email_required": "Email is required",
+    "email_invalid": "Email is not valid",
+    "password_required": "Password is required",
+    "password_short": "Password must be at least 6 characters",
+    "confirm_required": "Confirmation is required",
+    "passwords_no_match": "Passwords do not match"
   },
   "businessList": {
     "title": "Nearby Businesses"
@@ -25,5 +36,48 @@
     "empty": "No products in the cart.",
     "total": "Total",
     "order": "Place order"
+  },
+  "tabs": {
+    "home": "Home",
+    "explore": "Explore",
+    "profile": "Profile",
+    "businesses": "Businesses"
+  },
+  "home": {
+    "title": "Welcome",
+    "subtitle": "Find businesses near you",
+    "search_placeholder": "Search businesses..."
+  },
+  "explore": {
+    "title": "Explore",
+    "subtitle": "Discover new places",
+    "categories": "Categories",
+    "nearby": "Near you"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "retry": "Retry",
+    "ok": "Ok",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "refresh": "Refresh"
+  },
+  "errors": {
+    "network": "Connection error. Check your internet.",
+    "server": "Server error. Try again later.",
+    "unknown": "An unexpected error occurred.",
+    "required_field": "This field is required",
+    "invalid_format": "Invalid format"
   }
 }
