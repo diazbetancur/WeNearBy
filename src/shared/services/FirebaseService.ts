@@ -33,7 +33,7 @@ import {
 
 /**
  * Implementación de ApiService usando Firebase
- * 
+ *
  * Esta clase implementa todos los métodos abstractos de ApiService
  * usando Firebase como backend (Firestore + Authentication)
  */
@@ -141,10 +141,13 @@ export class FirebaseService extends ApiService {
       }
 
       const querySnapshot = await getDocs(q);
-      const businesses = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Business));
+      const businesses = querySnapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data()
+          } as Business)
+      );
 
       return this.createSuccessResponse(businesses);
     } catch (error: any) {
@@ -155,7 +158,7 @@ export class FirebaseService extends ApiService {
   async getBusinessById(id: string): Promise<ApiResponse<Business>> {
     try {
       const businessDoc = await getDoc(doc(firestore, 'businesses', id));
-      
+
       if (!businessDoc.exists()) {
         return this.createErrorResponse('Negocio no encontrado');
       }
@@ -167,7 +170,9 @@ export class FirebaseService extends ApiService {
     }
   }
 
-  async createBusiness(businessData: Omit<Business, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Business>> {
+  async createBusiness(
+    businessData: Omit<Business, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ApiResponse<Business>> {
     try {
       const now = new Date();
       const dataToSave = {
@@ -178,14 +183,17 @@ export class FirebaseService extends ApiService {
 
       const docRef = await addDoc(collection(firestore, 'businesses'), dataToSave);
       const business = { id: docRef.id, ...dataToSave } as Business;
-      
+
       return this.createSuccessResponse(business, 'Negocio creado exitosamente');
     } catch (error: any) {
       return this.handleError(error);
     }
   }
 
-  async updateBusiness(id: string, businessData: Partial<Business>): Promise<ApiResponse<Business>> {
+  async updateBusiness(
+    id: string,
+    businessData: Partial<Business>
+  ): Promise<ApiResponse<Business>> {
     try {
       const dataToUpdate = {
         ...businessData,
@@ -193,7 +201,7 @@ export class FirebaseService extends ApiService {
       };
 
       await updateDoc(doc(firestore, 'businesses', id), dataToUpdate);
-      
+
       // Obtener el documento actualizado
       const updatedBusiness = await this.getBusinessById(id);
       return updatedBusiness;
@@ -217,7 +225,10 @@ export class FirebaseService extends ApiService {
     });
   }
 
-  async searchBusinesses(searchQuery: string, options?: QueryOptions): Promise<ApiResponse<Business[]>> {
+  async searchBusinesses(
+    searchQuery: string,
+    options?: QueryOptions
+  ): Promise<ApiResponse<Business[]>> {
     try {
       // Para búsqueda simple, filtraremos por nombre
       // En una implementación más avanzada, usarías Algolia o similar
@@ -230,11 +241,12 @@ export class FirebaseService extends ApiService {
 
       const querySnapshot = await getDocs(q);
       const businesses = querySnapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() } as Business))
-        .filter(business => 
-          business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          business.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          business.category.toLowerCase().includes(searchQuery.toLowerCase())
+        .map((doc) => ({ id: doc.id, ...doc.data() } as Business))
+        .filter(
+          (business) =>
+            business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            business.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            business.category.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
       return this.createSuccessResponse(businesses);
@@ -268,10 +280,13 @@ export class FirebaseService extends ApiService {
       }
 
       const querySnapshot = await getDocs(q);
-      const products = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Product));
+      const products = querySnapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data()
+          } as Product)
+      );
 
       return this.createSuccessResponse(products);
     } catch (error: any) {
@@ -282,7 +297,7 @@ export class FirebaseService extends ApiService {
   async getProductById(id: string): Promise<ApiResponse<Product>> {
     try {
       const productDoc = await getDoc(doc(firestore, 'products', id));
-      
+
       if (!productDoc.exists()) {
         return this.createErrorResponse('Producto no encontrado');
       }
@@ -294,7 +309,9 @@ export class FirebaseService extends ApiService {
     }
   }
 
-  async createProduct(productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Product>> {
+  async createProduct(
+    productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ApiResponse<Product>> {
     try {
       const now = new Date();
       const dataToSave = {
@@ -305,7 +322,7 @@ export class FirebaseService extends ApiService {
 
       const docRef = await addDoc(collection(firestore, 'products'), dataToSave);
       const product = { id: docRef.id, ...dataToSave } as Product;
-      
+
       return this.createSuccessResponse(product, 'Producto creado exitosamente');
     } catch (error: any) {
       return this.handleError(error);
@@ -320,7 +337,7 @@ export class FirebaseService extends ApiService {
       };
 
       await updateDoc(doc(firestore, 'products', id), dataToUpdate);
-      
+
       const updatedProduct = await this.getProductById(id);
       return updatedProduct;
     } catch (error: any) {
@@ -337,7 +354,10 @@ export class FirebaseService extends ApiService {
     }
   }
 
-  async getProductsByCategory(category: string, options?: QueryOptions): Promise<ApiResponse<Product[]>> {
+  async getProductsByCategory(
+    category: string,
+    options?: QueryOptions
+  ): Promise<ApiResponse<Product[]>> {
     return this.getProducts(undefined, {
       ...options,
       filters: { category }
@@ -345,7 +365,11 @@ export class FirebaseService extends ApiService {
   }
 
   // ========== ORDER METHODS ==========
-  async getOrders(customerId?: string, businessId?: string, options?: QueryOptions): Promise<ApiResponse<Order[]>> {
+  async getOrders(
+    customerId?: string,
+    businessId?: string,
+    options?: QueryOptions
+  ): Promise<ApiResponse<Order[]>> {
     try {
       const ordersRef = collection(firestore, 'orders');
       let q = query(ordersRef);
@@ -369,10 +393,13 @@ export class FirebaseService extends ApiService {
       }
 
       const querySnapshot = await getDocs(q);
-      const orders = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Order));
+      const orders = querySnapshot.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data()
+          } as Order)
+      );
 
       return this.createSuccessResponse(orders);
     } catch (error: any) {
@@ -383,7 +410,7 @@ export class FirebaseService extends ApiService {
   async getOrderById(id: string): Promise<ApiResponse<Order>> {
     try {
       const orderDoc = await getDoc(doc(firestore, 'orders', id));
-      
+
       if (!orderDoc.exists()) {
         return this.createErrorResponse('Pedido no encontrado');
       }
@@ -395,7 +422,9 @@ export class FirebaseService extends ApiService {
     }
   }
 
-  async createOrder(orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Order>> {
+  async createOrder(
+    orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ApiResponse<Order>> {
     try {
       const now = new Date();
       const dataToSave = {
@@ -406,7 +435,7 @@ export class FirebaseService extends ApiService {
 
       const docRef = await addDoc(collection(firestore, 'orders'), dataToSave);
       const order = { id: docRef.id, ...dataToSave } as Order;
-      
+
       return this.createSuccessResponse(order, 'Pedido creado exitosamente');
     } catch (error: any) {
       return this.handleError(error);
@@ -421,7 +450,7 @@ export class FirebaseService extends ApiService {
       };
 
       await updateDoc(doc(firestore, 'orders', id), dataToUpdate);
-      
+
       const updatedOrder = await this.getOrderById(id);
       return updatedOrder;
     } catch (error: any) {
@@ -438,7 +467,10 @@ export class FirebaseService extends ApiService {
     }
   }
 
-  async getOrdersByStatus(status: Order['status'], options?: QueryOptions): Promise<ApiResponse<Order[]>> {
+  async getOrdersByStatus(
+    status: Order['status'],
+    options?: QueryOptions
+  ): Promise<ApiResponse<Order[]>> {
     return this.getOrders(undefined, undefined, {
       ...options,
       filters: { status }
@@ -466,7 +498,12 @@ export class FirebaseService extends ApiService {
     }
   }
 
-  async sendNotification(userId: string, title: string, body: string, data?: any): Promise<ApiResponse<void>> {
+  async sendNotification(
+    userId: string,
+    title: string,
+    body: string,
+    data?: any
+  ): Promise<ApiResponse<void>> {
     try {
       // TODO: Implementar con Firebase Cloud Messaging
       console.log('Send notification not implemented yet');

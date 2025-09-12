@@ -1,6 +1,6 @@
 /**
  * Abstract API Service Base Class
- * 
+ *
  * Esta clase abstracta define la interfaz común para todos los servicios de API.
  * Permite fácil migración entre diferentes proveedores (Firebase, Node.js, etc.)
  */
@@ -91,7 +91,7 @@ export interface OrderItem {
  */
 export abstract class ApiService {
   protected baseUrl: string;
-  
+
   constructor(baseUrl: string = '') {
     this.baseUrl = baseUrl;
   }
@@ -107,32 +107,62 @@ export abstract class ApiService {
   // ========== BUSINESS METHODS ==========
   abstract getBusinesses(options?: QueryOptions): Promise<ApiResponse<Business[]>>;
   abstract getBusinessById(id: string): Promise<ApiResponse<Business>>;
-  abstract createBusiness(businessData: Omit<Business, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Business>>;
-  abstract updateBusiness(id: string, businessData: Partial<Business>): Promise<ApiResponse<Business>>;
+  abstract createBusiness(
+    businessData: Omit<Business, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ApiResponse<Business>>;
+  abstract updateBusiness(
+    id: string,
+    businessData: Partial<Business>
+  ): Promise<ApiResponse<Business>>;
   abstract deleteBusiness(id: string): Promise<ApiResponse<void>>;
   abstract getBusinessesByOwner(ownerId: string): Promise<ApiResponse<Business[]>>;
-  abstract searchBusinesses(query: string, options?: QueryOptions): Promise<ApiResponse<Business[]>>;
+  abstract searchBusinesses(
+    query: string,
+    options?: QueryOptions
+  ): Promise<ApiResponse<Business[]>>;
 
   // ========== PRODUCT METHODS ==========
-  abstract getProducts(businessId?: string, options?: QueryOptions): Promise<ApiResponse<Product[]>>;
+  abstract getProducts(
+    businessId?: string,
+    options?: QueryOptions
+  ): Promise<ApiResponse<Product[]>>;
   abstract getProductById(id: string): Promise<ApiResponse<Product>>;
-  abstract createProduct(productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Product>>;
+  abstract createProduct(
+    productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ApiResponse<Product>>;
   abstract updateProduct(id: string, productData: Partial<Product>): Promise<ApiResponse<Product>>;
   abstract deleteProduct(id: string): Promise<ApiResponse<void>>;
-  abstract getProductsByCategory(category: string, options?: QueryOptions): Promise<ApiResponse<Product[]>>;
+  abstract getProductsByCategory(
+    category: string,
+    options?: QueryOptions
+  ): Promise<ApiResponse<Product[]>>;
 
   // ========== ORDER METHODS ==========
-  abstract getOrders(customerId?: string, businessId?: string, options?: QueryOptions): Promise<ApiResponse<Order[]>>;
+  abstract getOrders(
+    customerId?: string,
+    businessId?: string,
+    options?: QueryOptions
+  ): Promise<ApiResponse<Order[]>>;
   abstract getOrderById(id: string): Promise<ApiResponse<Order>>;
-  abstract createOrder(orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Order>>;
+  abstract createOrder(
+    orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ApiResponse<Order>>;
   abstract updateOrder(id: string, orderData: Partial<Order>): Promise<ApiResponse<Order>>;
   abstract deleteOrder(id: string): Promise<ApiResponse<void>>;
-  abstract getOrdersByStatus(status: Order['status'], options?: QueryOptions): Promise<ApiResponse<Order[]>>;
+  abstract getOrdersByStatus(
+    status: Order['status'],
+    options?: QueryOptions
+  ): Promise<ApiResponse<Order[]>>;
 
   // ========== UTILITY METHODS ==========
   abstract uploadImage(file: any, path: string): Promise<ApiResponse<string>>;
   abstract deleteImage(path: string): Promise<ApiResponse<void>>;
-  abstract sendNotification(userId: string, title: string, body: string, data?: any): Promise<ApiResponse<void>>;
+  abstract sendNotification(
+    userId: string,
+    title: string,
+    body: string,
+    data?: any
+  ): Promise<ApiResponse<void>>;
 
   // ========== HELPER METHODS ==========
   protected createSuccessResponse<T>(data: T, message?: string): ApiResponse<T> {
@@ -152,12 +182,12 @@ export abstract class ApiService {
 
   protected handleError(error: any): ApiResponse {
     console.error('API Service Error:', error);
-    
+
     if (error?.code) {
       // Firebase/API specific errors
       return this.createErrorResponse(this.mapErrorCode(error.code));
     }
-    
+
     return this.createErrorResponse(error?.message || 'Error desconocido');
   }
 
@@ -172,18 +202,18 @@ export abstract class ApiService {
       'auth/user-disabled': 'Cuenta deshabilitada',
       'auth/invalid-api-key': 'Clave API inválida',
       'auth/configuration-not-found': 'Configuración no encontrada',
-      
+
       // Firestore errors
       'permission-denied': 'Permisos insuficientes',
       'not-found': 'Documento no encontrado',
       'already-exists': 'El documento ya existe',
       'resource-exhausted': 'Cuota excedida',
-      'unauthenticated': 'Usuario no autenticado',
-      
+      unauthenticated: 'Usuario no autenticado',
+
       // Network errors
-      'unavailable': 'Servicio no disponible',
+      unavailable: 'Servicio no disponible',
       'deadline-exceeded': 'Tiempo de espera agotado',
-      'internal': 'Error interno del servidor'
+      internal: 'Error interno del servidor'
     };
 
     return errorMap[code] || `Error: ${code}`;

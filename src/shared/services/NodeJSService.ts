@@ -10,10 +10,10 @@ import {
 
 /**
  * Implementación de ApiService para Node.js Backend
- * 
+ *
  * Esta clase implementa todos los métodos abstractos de ApiService
  * usando tu propio backend de Node.js con REST API
- * 
+ *
  * NOTA: Este es un ejemplo de implementación futura.
  * No está actualmente funcional, pero muestra cómo migrar
  * fácilmente de Firebase a tu propio backend.
@@ -69,7 +69,7 @@ export class NodeJSService extends ApiService {
   }
 
   private async makeRequest<T>(
-    endpoint: string, 
+    endpoint: string,
     method: 'GET' | 'POST' | 'PUT' | 'DELETE' = 'GET',
     body?: any
   ): Promise<ApiResponse<T>> {
@@ -99,10 +99,14 @@ export class NodeJSService extends ApiService {
 
   // ========== AUTH METHODS ==========
   async signIn(email: string, password: string): Promise<ApiResponse<AuthUser>> {
-    const response = await this.makeRequest<{ user: AuthUser; token: string }>('/auth/login', 'POST', {
-      email,
-      password
-    });
+    const response = await this.makeRequest<{ user: AuthUser; token: string }>(
+      '/auth/login',
+      'POST',
+      {
+        email,
+        password
+      }
+    );
 
     if (response.success && response.data) {
       await this.saveToken(response.data.token);
@@ -113,10 +117,14 @@ export class NodeJSService extends ApiService {
   }
 
   async signUp(email: string, password: string): Promise<ApiResponse<AuthUser>> {
-    const response = await this.makeRequest<{ user: AuthUser; token: string }>('/auth/register', 'POST', {
-      email,
-      password
-    });
+    const response = await this.makeRequest<{ user: AuthUser; token: string }>(
+      '/auth/register',
+      'POST',
+      {
+        email,
+        password
+      }
+    );
 
     if (response.success && response.data) {
       await this.saveToken(response.data.token);
@@ -151,12 +159,12 @@ export class NodeJSService extends ApiService {
   // ========== BUSINESS METHODS ==========
   async getBusinesses(options?: QueryOptions): Promise<ApiResponse<Business[]>> {
     const queryParams = new URLSearchParams();
-    
+
     if (options?.limit) queryParams.append('limit', options.limit.toString());
     if (options?.offset) queryParams.append('offset', options.offset.toString());
     if (options?.orderBy) queryParams.append('orderBy', options.orderBy);
     if (options?.orderDirection) queryParams.append('orderDirection', options.orderDirection);
-    
+
     if (options?.filters) {
       Object.entries(options.filters).forEach(([key, value]) => {
         queryParams.append(`filter[${key}]`, value.toString());
@@ -171,11 +179,16 @@ export class NodeJSService extends ApiService {
     return this.makeRequest<Business>(`/businesses/${id}`);
   }
 
-  async createBusiness(businessData: Omit<Business, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Business>> {
+  async createBusiness(
+    businessData: Omit<Business, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ApiResponse<Business>> {
     return this.makeRequest<Business>('/businesses', 'POST', businessData);
   }
 
-  async updateBusiness(id: string, businessData: Partial<Business>): Promise<ApiResponse<Business>> {
+  async updateBusiness(
+    id: string,
+    businessData: Partial<Business>
+  ): Promise<ApiResponse<Business>> {
     return this.makeRequest<Business>(`/businesses/${id}`, 'PUT', businessData);
   }
 
@@ -195,13 +208,13 @@ export class NodeJSService extends ApiService {
   // ========== PRODUCT METHODS ==========
   async getProducts(businessId?: string, options?: QueryOptions): Promise<ApiResponse<Product[]>> {
     const queryParams = new URLSearchParams();
-    
+
     if (businessId) queryParams.append('businessId', businessId);
     if (options?.limit) queryParams.append('limit', options.limit.toString());
     if (options?.offset) queryParams.append('offset', options.offset.toString());
     if (options?.orderBy) queryParams.append('orderBy', options.orderBy);
     if (options?.orderDirection) queryParams.append('orderDirection', options.orderDirection);
-    
+
     if (options?.filters) {
       Object.entries(options.filters).forEach(([key, value]) => {
         queryParams.append(`filter[${key}]`, value.toString());
@@ -216,7 +229,9 @@ export class NodeJSService extends ApiService {
     return this.makeRequest<Product>(`/products/${id}`);
   }
 
-  async createProduct(productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Product>> {
+  async createProduct(
+    productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ApiResponse<Product>> {
     return this.makeRequest<Product>('/products', 'POST', productData);
   }
 
@@ -228,21 +243,28 @@ export class NodeJSService extends ApiService {
     return this.makeRequest<void>(`/products/${id}`, 'DELETE');
   }
 
-  async getProductsByCategory(category: string, options?: QueryOptions): Promise<ApiResponse<Product[]>> {
+  async getProductsByCategory(
+    category: string,
+    options?: QueryOptions
+  ): Promise<ApiResponse<Product[]>> {
     return this.getProducts(undefined, { ...options, filters: { category } });
   }
 
   // ========== ORDER METHODS ==========
-  async getOrders(customerId?: string, businessId?: string, options?: QueryOptions): Promise<ApiResponse<Order[]>> {
+  async getOrders(
+    customerId?: string,
+    businessId?: string,
+    options?: QueryOptions
+  ): Promise<ApiResponse<Order[]>> {
     const queryParams = new URLSearchParams();
-    
+
     if (customerId) queryParams.append('customerId', customerId);
     if (businessId) queryParams.append('businessId', businessId);
     if (options?.limit) queryParams.append('limit', options.limit.toString());
     if (options?.offset) queryParams.append('offset', options.offset.toString());
     if (options?.orderBy) queryParams.append('orderBy', options.orderBy);
     if (options?.orderDirection) queryParams.append('orderDirection', options.orderDirection);
-    
+
     if (options?.filters) {
       Object.entries(options.filters).forEach(([key, value]) => {
         queryParams.append(`filter[${key}]`, value.toString());
@@ -257,7 +279,9 @@ export class NodeJSService extends ApiService {
     return this.makeRequest<Order>(`/orders/${id}`);
   }
 
-  async createOrder(orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Order>> {
+  async createOrder(
+    orderData: Omit<Order, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<ApiResponse<Order>> {
     return this.makeRequest<Order>('/orders', 'POST', orderData);
   }
 
@@ -269,7 +293,10 @@ export class NodeJSService extends ApiService {
     return this.makeRequest<void>(`/orders/${id}`, 'DELETE');
   }
 
-  async getOrdersByStatus(status: Order['status'], options?: QueryOptions): Promise<ApiResponse<Order[]>> {
+  async getOrdersByStatus(
+    status: Order['status'],
+    options?: QueryOptions
+  ): Promise<ApiResponse<Order[]>> {
     return this.getOrders(undefined, undefined, { ...options, filters: { status } });
   }
 
@@ -283,7 +310,7 @@ export class NodeJSService extends ApiService {
       const response = await fetch(`${this.baseUrl}/upload/image`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${this.accessToken}`
+          Authorization: `Bearer ${this.accessToken}`
         },
         body: formData
       });
@@ -304,7 +331,12 @@ export class NodeJSService extends ApiService {
     return this.makeRequest('/upload/image', 'DELETE', { path });
   }
 
-  async sendNotification(userId: string, title: string, body: string, data?: any): Promise<ApiResponse<void>> {
+  async sendNotification(
+    userId: string,
+    title: string,
+    body: string,
+    data?: any
+  ): Promise<ApiResponse<void>> {
     return this.makeRequest('/notifications/send', 'POST', {
       userId,
       title,
