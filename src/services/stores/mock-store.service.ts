@@ -372,8 +372,6 @@ export class MockStoreService implements StoreService {
    * @returns Promise with array of Stores
    */
   async listByVendor(vendorUserId: string): Promise<Store[]> {
-    return Array.from(this.stores.values()).filter(
-      (store) => store.vendorUserId === vendorUserId
-    );
+    return Array.from(this.stores.values()).filter((store) => store.vendorUserId === vendorUserId);
   }
 }

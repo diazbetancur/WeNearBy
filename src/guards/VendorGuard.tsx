@@ -1,11 +1,11 @@
 /**
  * VendorGuard
- * 
+ *
  * Guard component that checks vendor approval status.
  * - Redirects to pending screen if status='pending'
  * - Redirects to request screen if no vendor profile
  * - Allows access if status='approved'
- * 
+ *
  * @example
  * ```tsx
  * <VendorGuard>
@@ -92,24 +92,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
   title: {
     fontSize: 24,
     fontWeight: '700',
     color: '#1a1a1a',
     marginBottom: 12,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   message: {
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 24
   },
   loadingText: {
     marginTop: 12,
     fontSize: 16,
-    color: '#666',
-  },
+    color: '#666'
+  }
 });

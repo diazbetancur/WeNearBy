@@ -1,6 +1,6 @@
 /**
  * StoreForm
- * 
+ *
  * Form component for creating/editing stores.
  * Includes all required fields: name, description, address, geo picker,
  * coverage, isOpen toggle, hasDelivery toggle, contact info.
@@ -18,9 +18,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
-import MapView, { Marker, Circle } from 'react-native-maps';
+import MapView, { Circle, Marker } from 'react-native-maps';
 import type { LatLng, Store, StoreContact } from '../types/models';
 
 interface StoreFormProps {
@@ -90,7 +90,7 @@ export default function StoreForm({ store, vendorUserId, onSubmit, onCancel }: S
         hasDelivery,
         contact,
         categoryIds: store?.categoryIds,
-        featured: store?.featured,
+        featured: store?.featured
       };
 
       await onSubmit(storeData);
@@ -160,11 +160,14 @@ export default function StoreForm({ store, vendorUserId, onSubmit, onCancel }: S
                 latitude: geo.lat,
                 longitude: geo.lng,
                 latitudeDelta: 0.05,
-                longitudeDelta: 0.05,
+                longitudeDelta: 0.05
               }}
               onPress={handleMapPress}
             >
-              <Marker coordinate={{ latitude: geo.lat, longitude: geo.lng }} title={name || 'Tu tienda'} />
+              <Marker
+                coordinate={{ latitude: geo.lat, longitude: geo.lng }}
+                title={name || 'Tu tienda'}
+              />
               <Circle
                 center={{ latitude: geo.lat, longitude: geo.lng }}
                 radius={parseFloat(coverageKm) * 1000}
@@ -294,16 +297,16 @@ export default function StoreForm({ store, vendorUserId, onSubmit, onCancel }: S
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
   content: {
-    padding: 16,
+    padding: 16
   },
   title: {
     fontSize: 24,
     fontWeight: '700',
     color: '#1a1a1a',
-    marginBottom: 20,
+    marginBottom: 20
   },
   section: {
     backgroundColor: '#fff',
@@ -314,20 +317,20 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1a1a1a',
-    marginBottom: 16,
+    marginBottom: 16
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
     color: '#1a1a1a',
     marginBottom: 8,
-    marginTop: 12,
+    marginTop: 12
   },
   input: {
     borderWidth: 1,
@@ -336,27 +339,27 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     color: '#1a1a1a',
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   textArea: {
     minHeight: 80,
-    textAlignVertical: 'top',
+    textAlignVertical: 'top'
   },
   helpText: {
     fontSize: 12,
     color: '#999',
     marginTop: 4,
-    marginBottom: 8,
+    marginBottom: 8
   },
   mapContainer: {
     height: 200,
     borderRadius: 8,
     overflow: 'hidden',
     marginTop: 8,
-    marginBottom: 12,
+    marginBottom: 12
   },
   map: {
-    flex: 1,
+    flex: 1
   },
   toggleRow: {
     flexDirection: 'row',
@@ -364,52 +367,52 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#f0f0f0'
   },
   toggleInfo: {
     flex: 1,
-    marginRight: 16,
+    marginRight: 16
   },
   toggleLabel: {
     fontSize: 16,
     fontWeight: '600',
     color: '#1a1a1a',
-    marginBottom: 4,
+    marginBottom: 4
   },
   toggleDesc: {
     fontSize: 12,
-    color: '#666',
+    color: '#666'
   },
   actions: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 8,
+    marginTop: 8
   },
   button: {
     flex: 1,
     borderRadius: 8,
     padding: 16,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   buttonPrimary: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#007AFF'
   },
   buttonSecondary: {
     backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: '#007AFF',
+    borderColor: '#007AFF'
   },
   buttonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#ccc'
   },
   buttonPrimaryText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '600'
   },
   buttonSecondaryText: {
     color: '#007AFF',
     fontSize: 16,
-    fontWeight: '600',
-  },
+    fontWeight: '600'
+  }
 });

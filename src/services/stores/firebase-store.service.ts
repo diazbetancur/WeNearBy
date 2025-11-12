@@ -311,10 +311,7 @@ export class FirebaseStoreService implements StoreService {
    * @returns Promise with array of Stores
    */
   async listByVendor(vendorUserId: string): Promise<Store[]> {
-    const q = query(
-      collection(db, this.collectionName),
-      where('vendorUserId', '==', vendorUserId)
-    );
+    const q = query(collection(db, this.collectionName), where('vendorUserId', '==', vendorUserId));
 
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => firestoreToStore(doc.id, doc.data() as StoreDoc));

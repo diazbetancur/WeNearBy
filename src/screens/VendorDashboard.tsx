@@ -1,6 +1,6 @@
 /**
  * VendorDashboard
- * 
+ *
  * Main dashboard for approved vendors.
  * Displays store summary and navigation to manage products, categories, orders.
  */
@@ -14,7 +14,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { useRole } from '../context/RoleContextProvider';
 import { getStoreService } from '../services/registry';
@@ -29,7 +29,7 @@ interface DashboardProps {
 export default function VendorDashboard({
   onNavigateToProducts,
   onNavigateToOrders,
-  onNavigateToStore,
+  onNavigateToStore
 }: DashboardProps) {
   const { user, vendorProfile } = useRole();
   const [store, setStore] = useState<Store | null>(null);
@@ -181,10 +181,9 @@ export default function VendorDashboard({
       <View style={styles.tipsCard}>
         <Text style={styles.tipsTitle}>💡 Consejos</Text>
         <Text style={styles.tipsText}>
-          • Mantén tu catálogo actualizado{'\n'}
-          • Responde rápido a los pedidos por WhatsApp{'\n'}
-          • Usa fotos de alta calidad para tus productos{'\n'}
-          • Define bien las categorías para facilitar la búsqueda
+          • Mantén tu catálogo actualizado{'\n'}• Responde rápido a los pedidos por WhatsApp{'\n'}•
+          Usa fotos de alta calidad para tus productos{'\n'}• Define bien las categorías para
+          facilitar la búsqueda
         </Text>
       </View>
     </ScrollView>
@@ -194,34 +193,34 @@ export default function VendorDashboard({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
   content: {
-    padding: 16,
+    padding: 16
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
   loadingText: {
     marginTop: 12,
     fontSize: 16,
-    color: '#666',
+    color: '#666'
   },
   header: {
-    marginBottom: 20,
+    marginBottom: 20
   },
   title: {
     fontSize: 28,
     fontWeight: '700',
     color: '#1a1a1a',
-    marginBottom: 4,
+    marginBottom: 4
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: '#666'
   },
   card: {
     backgroundColor: '#fff',
@@ -232,107 +231,107 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 12
   },
   cardTitle: {
     fontSize: 20,
     fontWeight: '700',
     color: '#1a1a1a',
-    flex: 1,
+    flex: 1
   },
   badge: {
     paddingHorizontal: 12,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 12
   },
   badgeOpen: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: '#E8F5E9'
   },
   badgeClosed: {
-    backgroundColor: '#FFEBEE',
+    backgroundColor: '#FFEBEE'
   },
   badgeText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#1a1a1a',
+    color: '#1a1a1a'
   },
   storeDescription: {
     fontSize: 14,
     color: '#666',
     marginBottom: 16,
-    lineHeight: 20,
+    lineHeight: 20
   },
   storeInfo: {
-    marginBottom: 16,
+    marginBottom: 16
   },
   infoItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 8
   },
   infoLabel: {
     fontSize: 14,
     color: '#666',
-    fontWeight: '600',
+    fontWeight: '600'
   },
   infoValue: {
     fontSize: 14,
-    color: '#1a1a1a',
+    color: '#1a1a1a'
   },
   editButton: {
     borderWidth: 1,
     borderColor: '#007AFF',
     borderRadius: 8,
     padding: 12,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   editButtonText: {
     color: '#007AFF',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '600'
   },
   noStoreTitle: {
     fontSize: 20,
     fontWeight: '700',
     color: '#1a1a1a',
     marginBottom: 12,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   noStoreText: {
     fontSize: 14,
     color: '#666',
     textAlign: 'center',
     lineHeight: 20,
-    marginBottom: 16,
+    marginBottom: 16
   },
   primaryButton: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
     padding: 14,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   primaryButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '600'
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: '700',
     color: '#1a1a1a',
-    marginBottom: 12,
+    marginBottom: 12
   },
   actionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
-    marginBottom: 20,
+    marginBottom: 20
   },
   actionCard: {
     backgroundColor: '#fff',
@@ -344,41 +343,41 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   actionCardDisabled: {
-    opacity: 0.5,
+    opacity: 0.5
   },
   actionIcon: {
     fontSize: 40,
-    marginBottom: 8,
+    marginBottom: 8
   },
   actionTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: '#1a1a1a',
     marginBottom: 4,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   actionDesc: {
     fontSize: 12,
     color: '#666',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   tipsCard: {
     backgroundColor: '#E3F2FD',
     borderRadius: 12,
-    padding: 16,
+    padding: 16
   },
   tipsTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1976D2',
-    marginBottom: 8,
+    marginBottom: 8
   },
   tipsText: {
     fontSize: 14,
     color: '#424242',
-    lineHeight: 22,
-  },
+    lineHeight: 22
+  }
 });

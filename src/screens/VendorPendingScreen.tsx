@@ -1,6 +1,6 @@
 /**
  * VendorPendingScreen
- * 
+ *
  * Screen shown to users with status='pending'
  * Displays message that their vendor request is under review.
  */
@@ -101,28 +101,28 @@ export default function VendorPendingScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
   iconContainer: {
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 16
   },
   icon: {
-    fontSize: 80,
+    fontSize: 80
   },
   title: {
     fontSize: 28,
     fontWeight: '700',
     color: '#1a1a1a',
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   subtitle: {
     fontSize: 16,
     color: '#666',
     marginBottom: 24,
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: 22
   },
   card: {
     backgroundColor: '#fff',
@@ -133,50 +133,50 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1a1a1a',
-    marginBottom: 16,
+    marginBottom: 16
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: 12
   },
   infoLabel: {
     fontSize: 14,
     color: '#666',
-    fontWeight: '600',
+    fontWeight: '600'
   },
   infoValue: {
     fontSize: 14,
     color: '#1a1a1a',
     flex: 1,
-    textAlign: 'right',
+    textAlign: 'right'
   },
   statusPending: {
     color: '#FF9800',
-    fontWeight: '700',
+    fontWeight: '700'
   },
   infoCard: {
     backgroundColor: '#FFF3E0',
     borderRadius: 12,
     padding: 16,
-    marginBottom: 16,
+    marginBottom: 16
   },
   infoTitle: {
     fontSize: 16,
     fontWeight: '700',
     color: '#F57C00',
-    marginBottom: 8,
+    marginBottom: 8
   },
   infoText: {
     fontSize: 14,
     color: '#424242',
-    lineHeight: 22,
+    lineHeight: 22
   },
   timelineCard: {
     backgroundColor: '#fff',
@@ -186,17 +186,17 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   timelineTitle: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1a1a1a',
-    marginBottom: 20,
+    marginBottom: 20
   },
   timelineItem: {
     flexDirection: 'row',
-    marginBottom: 24,
+    marginBottom: 24
   },
   timelineDot: {
     width: 16,
@@ -204,26 +204,26 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#E0E0E0',
     marginRight: 16,
-    marginTop: 4,
+    marginTop: 4
   },
   timelineDotCompleted: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#4CAF50'
   },
   timelineDotActive: {
-    backgroundColor: '#FF9800',
+    backgroundColor: '#FF9800'
   },
   timelineContent: {
-    flex: 1,
+    flex: 1
   },
   timelineStepTitle: {
     fontSize: 16,
     fontWeight: '600',
     color: '#1a1a1a',
-    marginBottom: 4,
+    marginBottom: 4
   },
   timelineStepDesc: {
     fontSize: 14,
     color: '#666',
-    lineHeight: 20,
-  },
+    lineHeight: 20
+  }
 });

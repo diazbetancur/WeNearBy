@@ -1,6 +1,6 @@
 /**
  * VendorRequestScreen
- * 
+ *
  * Screen for users who don't have a vendor profile yet.
  * Allows them to request vendor role.
  */
@@ -16,7 +16,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { useRole } from '../context/RoleContextProvider';
 
@@ -103,19 +103,16 @@ export default function VendorRequestScreen() {
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>📋 Requisitos</Text>
           <Text style={styles.infoText}>
-            • Información de contacto válida{'\n'}
-            • Negocio legalmente constituido{'\n'}
-            • Cumplir con términos y condiciones
+            • Información de contacto válida{'\n'}• Negocio legalmente constituido{'\n'}• Cumplir
+            con términos y condiciones
           </Text>
         </View>
 
         <View style={styles.infoCard}>
           <Text style={styles.infoTitle}>✅ Qué obtendrás</Text>
           <Text style={styles.infoText}>
-            • Panel para gestionar tu tienda{'\n'}
-            • Crear y editar productos{'\n'}
-            • Recibir pedidos de clientes{'\n'}
-            • Gestionar inventario y categorías
+            • Panel para gestionar tu tienda{'\n'}• Crear y editar productos{'\n'}• Recibir pedidos
+            de clientes{'\n'}• Gestionar inventario y categorías
           </Text>
         </View>
 
@@ -143,24 +140,24 @@ export default function VendorRequestScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
   content: {
-    padding: 20,
+    padding: 20
   },
   title: {
     fontSize: 28,
     fontWeight: '700',
     color: '#1a1a1a',
     marginBottom: 8,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   subtitle: {
     fontSize: 16,
     color: '#666',
     marginBottom: 24,
     textAlign: 'center',
-    lineHeight: 22,
+    lineHeight: 22
   },
   card: {
     backgroundColor: '#fff',
@@ -171,14 +168,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
     color: '#1a1a1a',
     marginBottom: 8,
-    marginTop: 12,
+    marginTop: 12
   },
   input: {
     borderWidth: 1,
@@ -187,24 +184,24 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     color: '#1a1a1a',
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   infoCard: {
     backgroundColor: '#E3F2FD',
     borderRadius: 12,
     padding: 16,
-    marginBottom: 16,
+    marginBottom: 16
   },
   infoTitle: {
     fontSize: 16,
     fontWeight: '700',
     color: '#1976D2',
-    marginBottom: 8,
+    marginBottom: 8
   },
   infoText: {
     fontSize: 14,
     color: '#424242',
-    lineHeight: 22,
+    lineHeight: 22
   },
   button: {
     backgroundColor: '#007AFF',
@@ -212,20 +209,20 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     marginTop: 8,
-    marginBottom: 16,
+    marginBottom: 16
   },
   buttonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#ccc'
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '600'
   },
   note: {
     fontSize: 12,
     color: '#999',
     textAlign: 'center',
-    fontStyle: 'italic',
-  },
+    fontStyle: 'italic'
+  }
 });
