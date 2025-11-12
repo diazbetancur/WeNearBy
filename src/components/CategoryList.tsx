@@ -1,20 +1,12 @@
 /**
  * CategoryList
- * 
+ *
  * Component for managing product categories (tags).
  * CRUD operations: create, edit, delete categories.
  */
 
 import React, { useState } from 'react';
-import {
-  Alert,
-  FlatList,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Alert, FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface Category {
   id: string;
@@ -34,7 +26,7 @@ export default function CategoryList({ categories, onUpdate }: CategoryListProps
   // Convert string array to Category objects for easier handling
   const categoryObjects: Category[] = categories.map((name) => ({
     id: name.toLowerCase().replace(/\s+/g, '-'),
-    name,
+    name
   }));
 
   const handleAdd = () => {
@@ -68,9 +60,7 @@ export default function CategoryList({ categories, onUpdate }: CategoryListProps
 
     // Check for duplicates (excluding current)
     if (
-      categories.some(
-        (cat) => cat.toLowerCase() === trimmed.toLowerCase() && cat !== editingValue
-      )
+      categories.some((cat) => cat.toLowerCase() === trimmed.toLowerCase() && cat !== editingValue)
     ) {
       Alert.alert('Error', 'Esta categoría ya existe');
       return;
@@ -98,8 +88,8 @@ export default function CategoryList({ categories, onUpdate }: CategoryListProps
         onPress: () => {
           const updated = categories.filter((cat) => cat !== category.name);
           onUpdate(updated);
-        },
-      },
+        }
+      }
     ]);
   };
 
@@ -196,24 +186,24 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   title: {
     fontSize: 18,
     fontWeight: '700',
     color: '#1a1a1a',
-    marginBottom: 8,
+    marginBottom: 8
   },
   description: {
     fontSize: 14,
     color: '#666',
     marginBottom: 16,
-    lineHeight: 20,
+    lineHeight: 20
   },
   addSection: {
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 16,
+    marginBottom: 16
   },
   input: {
     flex: 1,
@@ -222,18 +212,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
-    color: '#1a1a1a',
+    color: '#1a1a1a'
   },
   addButton: {
     backgroundColor: '#007AFF',
     borderRadius: 8,
     paddingHorizontal: 20,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   addButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: '600'
   },
   categoryItem: {
     flexDirection: 'row',
@@ -242,22 +232,22 @@ const styles = StyleSheet.create({
     padding: 12,
     backgroundColor: '#f9f9f9',
     borderRadius: 8,
-    marginBottom: 8,
+    marginBottom: 8
   },
   categoryName: {
     flex: 1,
     fontSize: 16,
-    color: '#1a1a1a',
+    color: '#1a1a1a'
   },
   actions: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 8
   },
   actionButton: {
-    padding: 8,
+    padding: 8
   },
   actionButtonText: {
-    fontSize: 18,
+    fontSize: 18
   },
   editInput: {
     flex: 1,
@@ -267,53 +257,53 @@ const styles = StyleSheet.create({
     padding: 8,
     fontSize: 16,
     color: '#1a1a1a',
-    marginRight: 8,
+    marginRight: 8
   },
   editActions: {
     flexDirection: 'row',
-    gap: 4,
+    gap: 4
   },
   editButton: {
     backgroundColor: '#34C759',
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   editButtonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '700'
   },
   cancelButton: {
     backgroundColor: '#FF3B30',
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   cancelButtonText: {
     color: '#fff',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '700'
   },
   emptyState: {
     alignItems: 'center',
-    padding: 32,
+    padding: 32
   },
   emptyIcon: {
     fontSize: 48,
-    marginBottom: 12,
+    marginBottom: 12
   },
   emptyText: {
     fontSize: 16,
     fontWeight: '600',
     color: '#666',
-    marginBottom: 4,
+    marginBottom: 4
   },
   emptyHint: {
     fontSize: 14,
     color: '#999',
-    textAlign: 'center',
-  },
+    textAlign: 'center'
+  }
 });

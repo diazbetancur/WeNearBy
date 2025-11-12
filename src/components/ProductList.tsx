@@ -1,6 +1,6 @@
 /**
  * ProductList
- * 
+ *
  * Component for managing store products with CRUD operations.
  * Supports 1-5 image uploads to Firebase Storage.
  * Includes category filtering and product activation toggle.
@@ -21,7 +21,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
 import { getProductService } from '../services/registry';
 import type { Product, ProductImage } from '../types/models';
@@ -55,7 +55,7 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
     price: '',
     tags: [],
     images: [],
-    active: true,
+    active: true
   });
   const [uploadingImages, setUploadingImages] = useState(false);
 
@@ -65,7 +65,7 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
     try {
       const fetchedProducts = await productService.listByStore(storeId, {
         activeOnly: false, // Show all products (including inactive) for vendor
-        categoryId: selectedCategory || undefined,
+        categoryId: selectedCategory || undefined
       });
       setProducts(fetchedProducts);
     } catch (error) {
@@ -94,7 +94,7 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
       price: '',
       tags: [],
       images: [],
-      active: true,
+      active: true
     });
     setModalVisible(true);
   };
@@ -107,7 +107,7 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
       price: product.price.toString(),
       tags: product.tags || [],
       images: product.images,
-      active: product.active,
+      active: product.active
     });
     setModalVisible(true);
   };
@@ -133,26 +133,26 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsMultipleSelection: true,
       quality: 0.8,
-      selectionLimit: 5 - formData.images.length,
+      selectionLimit: 5 - formData.images.length
     });
 
     if (!result.canceled && result.assets) {
       setUploadingImages(true);
       try {
         const newImages: ProductImage[] = [];
-        
+
         for (const asset of result.assets) {
           // In a real app, upload to Firebase Storage here
           // For now, use the local URI
           newImages.push({
             url: asset.uri,
-            alt: formData.name || 'Producto',
+            alt: formData.name || 'Producto'
           });
         }
 
         setFormData({
           ...formData,
-          images: [...formData.images, ...newImages],
+          images: [...formData.images, ...newImages]
         });
       } catch (error) {
         console.error('Error uploading images:', error);
@@ -203,7 +203,7 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
           price: priceNum,
           images: formData.images,
           tags: formData.tags,
-          active: formData.active,
+          active: formData.active
         });
         Alert.alert('Éxito', 'Producto actualizado correctamente');
       } else {
@@ -216,7 +216,7 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
           currency: 'COP',
           images: formData.images,
           tags: formData.tags,
-          active: formData.active,
+          active: formData.active
         });
         Alert.alert('Éxito', 'Producto creado correctamente');
       }
@@ -232,28 +232,24 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
   };
 
   const handleDelete = (product: Product) => {
-    Alert.alert(
-      'Eliminar Producto',
-      `¿Estás seguro de eliminar "${product.name}"?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Eliminar',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              // Set product as inactive instead of deleting
-              await productService.update(product.id, { active: false });
-              Alert.alert('Éxito', 'Producto desactivado');
-              loadProducts();
-            } catch (error) {
-              console.error('Error deleting product:', error);
-              Alert.alert('Error', 'No se pudo desactivar el producto');
-            }
-          },
-        },
-      ]
-    );
+    Alert.alert('Eliminar Producto', `¿Estás seguro de eliminar "${product.name}"?`, [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Eliminar',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            // Set product as inactive instead of deleting
+            await productService.update(product.id, { active: false });
+            Alert.alert('Éxito', 'Producto desactivado');
+            loadProducts();
+          } catch (error) {
+            console.error('Error deleting product:', error);
+            Alert.alert('Error', 'No se pudo desactivar el producto');
+          }
+        }
+      }
+    ]);
   };
 
   const renderProduct = ({ item }: { item: Product }) => (
@@ -276,9 +272,7 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
           </Text>
         )}
 
-        <Text style={styles.productPrice}>
-          ${item.price.toLocaleString('es-CO')} COP
-        </Text>
+        <Text style={styles.productPrice}>${item.price.toLocaleString('es-CO')} COP</Text>
 
         {item.tags && item.tags.length > 0 && (
           <View style={styles.tags}>
@@ -314,7 +308,7 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
             <Text
               style={[
                 styles.filterChipText,
-                selectedCategory === null && styles.filterChipTextActive,
+                selectedCategory === null && styles.filterChipTextActive
               ]}
             >
               Todos
@@ -330,7 +324,7 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
               <Text
                 style={[
                   styles.filterChipText,
-                  selectedCategory === category && styles.filterChipTextActive,
+                  selectedCategory === category && styles.filterChipTextActive
                 ]}
               >
                 {category}
@@ -422,7 +416,10 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
               {formData.images.map((image, index) => (
                 <View key={index} style={styles.imageWrapper}>
                   <Image source={{ uri: image.url }} style={styles.imagePreview} />
-                  <TouchableOpacity style={styles.removeImageButton} onPress={() => removeImage(index)}>
+                  <TouchableOpacity
+                    style={styles.removeImageButton}
+                    onPress={() => removeImage(index)}
+                  >
                     <Text style={styles.removeImageText}>✕</Text>
                   </TouchableOpacity>
                 </View>
@@ -451,14 +448,14 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
                   key={category}
                   style={[
                     styles.tagOption,
-                    formData.tags.includes(category) && styles.tagOptionActive,
+                    formData.tags.includes(category) && styles.tagOptionActive
                   ]}
                   onPress={() => toggleTag(category)}
                 >
                   <Text
                     style={[
                       styles.tagOptionText,
-                      formData.tags.includes(category) && styles.tagOptionTextActive,
+                      formData.tags.includes(category) && styles.tagOptionTextActive
                     ]}
                   >
                     {category}
@@ -506,40 +503,40 @@ export default function ProductList({ storeId, availableCategories }: ProductLis
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
   filterSection: {
     backgroundColor: '#fff',
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#f0f0f0'
   },
   filterChip: {
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: '#f0f0f0',
-    marginRight: 8,
+    marginRight: 8
   },
   filterChipActive: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#007AFF'
   },
   filterChipText: {
     fontSize: 14,
     color: '#666',
-    fontWeight: '600',
+    fontWeight: '600'
   },
   filterChipTextActive: {
-    color: '#fff',
+    color: '#fff'
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   listContent: {
-    padding: 16,
+    padding: 16
   },
   productCard: {
     backgroundColor: '#fff',
@@ -550,118 +547,118 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 3
   },
   productImage: {
     width: '100%',
     height: 200,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f0f0f0'
   },
   productInfo: {
-    padding: 16,
+    padding: 16
   },
   productHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 8
   },
   productName: {
     flex: 1,
     fontSize: 18,
     fontWeight: '700',
-    color: '#1a1a1a',
+    color: '#1a1a1a'
   },
   badge: {
     paddingHorizontal: 12,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 12
   },
   badgeActive: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: '#E8F5E9'
   },
   badgeInactive: {
-    backgroundColor: '#FFEBEE',
+    backgroundColor: '#FFEBEE'
   },
   badgeText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#1a1a1a',
+    color: '#1a1a1a'
   },
   productDescription: {
     fontSize: 14,
     color: '#666',
     marginBottom: 8,
-    lineHeight: 20,
+    lineHeight: 20
   },
   productPrice: {
     fontSize: 20,
     fontWeight: '700',
     color: '#007AFF',
-    marginBottom: 12,
+    marginBottom: 12
   },
   tags: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
-    marginBottom: 12,
+    marginBottom: 12
   },
   tag: {
     backgroundColor: '#E3F2FD',
     paddingHorizontal: 12,
     paddingVertical: 4,
-    borderRadius: 12,
+    borderRadius: 12
   },
   tagText: {
     fontSize: 12,
     color: '#1976D2',
-    fontWeight: '600',
+    fontWeight: '600'
   },
   productActions: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 8
   },
   editButton: {
     flex: 1,
     backgroundColor: '#007AFF',
     borderRadius: 8,
     padding: 12,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   editButtonText: {
     color: '#fff',
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '600'
   },
   deleteButton: {
     backgroundColor: '#FF3B30',
     borderRadius: 8,
     paddingHorizontal: 16,
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   deleteButtonText: {
-    fontSize: 18,
+    fontSize: 18
   },
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 32,
+    padding: 32
   },
   emptyIcon: {
     fontSize: 64,
-    marginBottom: 16,
+    marginBottom: 16
   },
   emptyText: {
     fontSize: 18,
     fontWeight: '600',
     color: '#666',
-    marginBottom: 8,
+    marginBottom: 8
   },
   emptyHint: {
     fontSize: 14,
     color: '#999',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   fab: {
     position: 'absolute',
@@ -677,16 +674,16 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
-    elevation: 8,
+    elevation: 8
   },
   fabText: {
     color: '#fff',
     fontSize: 32,
-    fontWeight: '300',
+    fontWeight: '300'
   },
   modalContainer: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
   modalHeader: {
     flexDirection: 'row',
@@ -695,27 +692,27 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#f0f0f0'
   },
   modalTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#1a1a1a',
+    color: '#1a1a1a'
   },
   closeButton: {
     fontSize: 28,
-    color: '#666',
+    color: '#666'
   },
   modalContent: {
     flex: 1,
-    padding: 16,
+    padding: 16
   },
   label: {
     fontSize: 14,
     fontWeight: '600',
     color: '#1a1a1a',
     marginBottom: 8,
-    marginTop: 16,
+    marginTop: 16
   },
   input: {
     borderWidth: 1,
@@ -724,25 +721,25 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: 16,
     color: '#1a1a1a',
-    backgroundColor: '#fff',
+    backgroundColor: '#fff'
   },
   textArea: {
     minHeight: 80,
-    textAlignVertical: 'top',
+    textAlignVertical: 'top'
   },
   imagesContainer: {
     flexDirection: 'row',
-    marginBottom: 16,
+    marginBottom: 16
   },
   imageWrapper: {
     marginRight: 12,
-    position: 'relative',
+    position: 'relative'
   },
   imagePreview: {
     width: 100,
     height: 100,
     borderRadius: 8,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f0f0f0'
   },
   removeImageButton: {
     position: 'absolute',
@@ -753,12 +750,12 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   removeImageText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '700'
   },
   addImageButton: {
     width: 100,
@@ -769,17 +766,17 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#f9f9f9'
   },
   addImageText: {
     fontSize: 32,
-    color: '#007AFF',
+    color: '#007AFF'
   },
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
-    marginBottom: 16,
+    marginBottom: 16
   },
   tagOption: {
     paddingHorizontal: 16,
@@ -787,19 +784,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: '#f0f0f0',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#ddd'
   },
   tagOptionActive: {
     backgroundColor: '#E3F2FD',
-    borderColor: '#007AFF',
+    borderColor: '#007AFF'
   },
   tagOptionText: {
     fontSize: 14,
     color: '#666',
-    fontWeight: '600',
+    fontWeight: '600'
   },
   tagOptionTextActive: {
-    color: '#007AFF',
+    color: '#007AFF'
   },
   toggleRow: {
     flexDirection: 'row',
@@ -808,21 +805,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 16,
     borderRadius: 8,
-    marginTop: 16,
+    marginTop: 16
   },
   toggleInfo: {
     flex: 1,
-    marginRight: 16,
+    marginRight: 16
   },
   toggleLabel: {
     fontSize: 16,
     fontWeight: '600',
     color: '#1a1a1a',
-    marginBottom: 4,
+    marginBottom: 4
   },
   toggleDesc: {
     fontSize: 12,
-    color: '#666',
+    color: '#666'
   },
   submitButton: {
     backgroundColor: '#007AFF',
@@ -830,14 +827,14 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     marginTop: 24,
-    marginBottom: 32,
+    marginBottom: 32
   },
   submitButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#ccc'
   },
   submitButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: '600',
-  },
+    fontWeight: '600'
+  }
 });
